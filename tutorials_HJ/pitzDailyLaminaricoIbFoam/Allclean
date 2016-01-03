@@ -5,7 +5,7 @@
 
 cleanCase
 
-\rm -rf 0
+rm -rf 0
 cp -r save 0
 
 rm -rf constant/polyMesh/
