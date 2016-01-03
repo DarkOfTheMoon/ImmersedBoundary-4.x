@@ -19,5 +19,4 @@ EXE_LIBS = \
     -lsurfMesh \
     -lsampling \
     -ldynamicMesh \
-    -L$(FOAM_USER_LIBBIN) -limmersedBoundary \
-    -llduSolvers
+    -L$(FOAM_USER_LIBBIN) -limmersedBoundary

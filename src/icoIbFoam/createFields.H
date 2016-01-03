@@ -7,7 +7,7 @@
             "transportProperties",
             runTime.constant(),
             mesh,
-            IOobject::MUST_READ,
+            IOobject::MUST_READ_IF_MODIFIED,
             IOobject::NO_WRITE
         )
     );
@@ -50,6 +50,6 @@
 
     label pRefCell = 0;
     scalar pRefValue = 0.0;
-    setRefCell(p, mesh.solutionDict().subDict("PIMPLE"), pRefCell, pRefValue);
+    setRefCell(p, mesh.solutionDict().subDict("PISO"), pRefCell, pRefValue);
 
 #   include "createIbMasks.H"

@@ -234,7 +234,7 @@ Foam::label Foam::refineImmersedBoundaryMesh::twoDNess() const
     //
 
     // Mark boundary points
-    boolList boundaryPoint(mesh_.allPoints().size(), false);
+    boolList boundaryPoint(mesh_.points().size(), false);
 
     forAll (patches, patchI)
     {

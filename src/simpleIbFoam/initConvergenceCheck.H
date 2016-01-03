@@ -3,5 +3,5 @@
     scalar eqnResidual = 1, maxResidual = 0;
     scalar convergenceCriterion = 0;
 
-    simple.readIfPresent("convergence", convergenceCriterion);
+    simple.dict().readIfPresent("convergence", convergenceCriterion);
 

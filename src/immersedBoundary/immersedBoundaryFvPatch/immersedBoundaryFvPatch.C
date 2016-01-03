@@ -1003,7 +1003,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
             FatalErrorIn
             (
                 "immersedBoundaryFvPatch::makeIbPointsAndNormals() const"
-            )   << "Intersection point is not on simmetry plane "
+            )   << "Intersection point is not on symmetry plane "
                 << "for 2-D geometry" << abort(FatalError);
         }
     }
@@ -1105,7 +1105,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
             scalar r = mag(C[curCell] - C[ibc[cellI]]);
             if (r <= rM[cellI])
             {
-                scalar limit = -Foam::cos(80*mathematicalConstant::pi/180);
+                static scalar limit(-Foam::cos(4/9*constant::mathematical::pi));
                 vector dir = (C[curCell] - ibp[cellI]);
                 dir /= mag(dir) + SMALL;
 

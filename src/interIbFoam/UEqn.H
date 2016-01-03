@@ -16,7 +16,7 @@
 
     UEqn.relax();
 
-    if (momentumPredictor)
+    if (pimple.momentumPredictor())
     {
         UEqn.boundaryManipulate(U.boundaryField());
 

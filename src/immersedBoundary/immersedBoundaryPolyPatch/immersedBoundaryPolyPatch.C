@@ -66,7 +66,19 @@ void Foam::immersedBoundaryPolyPatch::makeTriSurfSearch() const
             << abort(FatalError);
     }
 
-    triSurfSearchPtr_ = new triSurfaceSearch(ibMesh_);
+    const IOdictionary tio
+    (
+        IOobject
+        (
+            "triSurface",
+            this->boundaryMesh().mesh().time().system(),
+            this->boundaryMesh().mesh(),
+            IOobject::MUST_READ_IF_MODIFIED,
+            IOobject::NO_WRITE
+        )
+    );
+
+    triSurfSearchPtr_ = new triSurfaceSearch(ibMesh_,tio);
 }
 
 
@@ -84,10 +96,11 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
     const label size,
     const label start,
     const label index,
-    const polyBoundaryMesh& bm
+    const polyBoundaryMesh& bm,
+    const word& patchType
 )
 :
-    polyPatch(name, size, start, index, bm),
+    polyPatch(name, size, start, index, bm, patchType),
     ibMesh_
     (
         IOobject
@@ -110,10 +123,11 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
     const word& name,
     const dictionary& dict,
     const label index,
-    const polyBoundaryMesh& bm
+    const polyBoundaryMesh& bm,
+    const word& patchType
 )
 :
-    polyPatch(name, dict, index, bm),
+    polyPatch(name, dict, index, bm, patchType),
     ibMesh_
     (
         IOobject

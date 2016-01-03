@@ -29,7 +29,7 @@
         )*rUAf*mesh.magSf();
 
 
-    for(int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
+    while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pdEqn
         (
@@ -53,7 +53,7 @@
 
 //         p.correctBoundaryConditions();
 
-        if (nonOrth == nNonOrthCorr)
+        if (pimple.finalNonOrthogonalIter())
         {
             phi -= pdEqn.flux();
         }

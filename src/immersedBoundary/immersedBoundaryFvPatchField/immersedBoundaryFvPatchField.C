@@ -46,7 +46,7 @@ label immersedBoundaryFvPatchField<Type>::nBcIter_
 template<class Type>
 scalar immersedBoundaryFvPatchField<Type>::bcTolerance_
 (
-    debug::tolerances("ImmersedBoundaryBCwTolerance", 1e-6)
+    1e-6
 );
 
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
@@ -830,8 +830,7 @@ void immersedBoundaryFvPatchField<Type>::write(Ostream& os) const
     this->writeEntry("value", os);
 
     // Write immersed boundary data as a vtk file
-    autoPtr<surfaceWriter<Type> > writerPtr =
-        surfaceWriter<Type>::New("vtk");
+    autoPtr<surfaceWriter> writerPtr = surfaceWriter::New("vtk");
 
     const triSurface& ts = ibPatch_.ibMesh();
 
@@ -849,7 +848,8 @@ void immersedBoundaryFvPatchField<Type>::write(Ostream& os) const
         ts.points(),
         f,
         this->dimensionedInternalField().name(),
-        this->triValue()()
+        this->triValue()(),
+        true
     );
 }
 

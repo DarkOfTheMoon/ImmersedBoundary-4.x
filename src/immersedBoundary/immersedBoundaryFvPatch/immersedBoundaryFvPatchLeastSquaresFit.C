@@ -28,6 +28,38 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 
+Foam::scalarSquareMatrix LUinvert(Foam::scalarSquareMatrix& mat)
+{
+    using namespace Foam;
+    scalarSquareMatrix luMatrix = mat;
+
+    scalarSquareMatrix luInvert(luMatrix.n());
+    scalarField column(luMatrix.n());
+
+    labelList pivotIndices(luMatrix.n());
+
+    LUDecompose(luMatrix, pivotIndices);
+
+    for (label j = 0; j < luMatrix.n(); j++)
+    {
+        for (label i = 0; i < luMatrix.n(); i++)
+        {
+            column[i] = 0.0;
+        }
+
+        column[j] = 1.0;
+
+        LUBacksubstitute(luMatrix, pivotIndices, column);
+
+        for (label i = 0; i < luMatrix.n(); i++)
+        {
+            luInvert[i][j] = column[i];
+        }
+    }
+
+    return luInvert;
+}
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
@@ -187,7 +219,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs, 0.0);
+        scalarSquareMatrix lsM(nCoeffs);
 
         for (label i = 0; i < lsM.n(); i++)
         {
@@ -218,7 +250,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
         conditionNumber[cellI] = maxRowSum;
 
         // Calculate inverse
-        scalarSquareMatrix invLsM = lsM.LUinvert();
+        scalarSquareMatrix invLsM = LUinvert(lsM);
 
         for (label i = 0; i < lsM.n(); i++)
         {
@@ -481,7 +513,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs, 0.0);
+        scalarSquareMatrix lsM(nCoeffs);
 
         for (label i = 0; i < lsM.n(); i++)
         {
@@ -512,7 +544,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
         conditionNumber[cellI] = maxRowSum;
 
         // Calculate inverse
-        scalarSquareMatrix invLsM = lsM.LUinvert();
+        scalarSquareMatrix invLsM = LUinvert(lsM);
 
         for (label i = 0; i < lsM.n(); i++)
         {

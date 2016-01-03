@@ -170,7 +170,7 @@ void immersedBoundaryEpsilonWallFunctionFvPatchScalarField::updateCoeffs()
     }
 
     const RASModel& rasModel = db().lookupObject<RASModel>("RASProperties");
-    const scalar yPlusLam = rasModel.yPlusLam(kappa_, E_);
+//     const scalar yPlusLam = rasModel.yPlusLam(kappa_, E_);
     const scalarField& y = rasModel.y()[patch().index()];
 
     const scalar Cmu25 = pow(Cmu_, 0.25);

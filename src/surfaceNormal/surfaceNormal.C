@@ -30,6 +30,7 @@ Description
 #include "argList.H"
 #include "triSurface.H"
 #include "IFstream.H"
+#include "OFstream.H"
 
 using namespace Foam;
 
@@ -50,15 +51,10 @@ int main(int argc, char *argv[])
 
     triSurface ts(surfFileName);
 
-    fileName normalFileName(surfFileName.lessExt() + "Normals");
+    fileName normalFileName(surfFileName.lessExt() + "_Normals"+".vtk");
 
     Info<< "Writing normals to file " << normalFileName << endl;
-    triSurface::writeVTKNormals
-    (
-        normalFileName,
-        ts,
-        ts.points()
-    );
+    ts.write(normalFileName);
 
     Info << "End\n" << endl;
 

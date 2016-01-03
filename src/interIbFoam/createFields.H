@@ -44,7 +44,7 @@
 
 
     Info<< "Reading transportProperties\n" << endl;
-    twoPhaseMixture twoPhaseProperties(U, phi, "alpha1");
+    immiscibleIncompressibleTwoPhaseMixture twoPhaseProperties(U, phi);
 
     const dimensionedScalar& rho1 = twoPhaseProperties.rho1();
     const dimensionedScalar& rho2 = twoPhaseProperties.rho2();
