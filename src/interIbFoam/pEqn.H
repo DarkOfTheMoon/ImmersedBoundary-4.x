@@ -50,11 +50,7 @@
         }
     }
 
-    // Explicitly relax pressure except for last corrector
-    if (oCorr != nOuterCorr - 1)
-    {
-        pd.relax();
-    }
+    pd.relax();
 
     U += rUA*fvc::reconstruct((phi - phiU)/rUAf);
     U.correctBoundaryConditions();
