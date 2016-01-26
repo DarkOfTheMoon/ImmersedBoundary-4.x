@@ -1,8 +1,10 @@
 {
+#if 0 //TODO fix me
     if (nOuterCorr != 1)
     {
         pd.storePrevIter();
     }
+#endif
 
     volScalarField rUA = 1.0/UEqn.A();
     surfaceScalarField rUAf = fvc::interpolate(rUA);
@@ -40,18 +42,7 @@
 
         pdEqn.boundaryManipulate(pd.boundaryField());
 
-        if (corr == nCorr - 1 && nonOrth == nNonOrthCorr)
-        {
-            pdEqn.solve(mesh.solver(pd.name() + "Final"));
-//             pdEqn.solve(mesh.solutionDict().solver(pd.name() + "Final"));
-        }
-        else
-        {
-            pdEqn.solve(mesh.solver(pd.name()));
-//             pdEqn.solve(mesh.solutionDict().solver(pd.name()));
-        }
-
-//         p.correctBoundaryConditions();
+        pdEqn.solve(mesh.solver(pd.select(pimple.finalInnerIter())));
 
         if (pimple.finalNonOrthogonalIter())
         {
