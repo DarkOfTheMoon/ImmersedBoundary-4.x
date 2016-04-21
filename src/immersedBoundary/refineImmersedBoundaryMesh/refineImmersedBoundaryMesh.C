@@ -42,8 +42,6 @@ void Foam::refineImmersedBoundaryMesh::makeRefinementCells() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (refinementCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)

@@ -70,8 +70,6 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (invDirichletMatricesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -291,8 +289,6 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (invNeumannMatricesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)

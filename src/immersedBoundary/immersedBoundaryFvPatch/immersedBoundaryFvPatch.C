@@ -53,8 +53,6 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (gammaPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -111,8 +109,6 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (gammaExtPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -186,8 +182,6 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (sGammaPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -340,8 +334,6 @@ void Foam::immersedBoundaryFvPatch::makeIbCells() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -610,8 +602,6 @@ void Foam::immersedBoundaryFvPatch::makeIbFaces() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibFacesPtr_ || ibFaceCellsPtr_ || ibFaceFlipsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -733,8 +723,6 @@ void Foam::immersedBoundaryFvPatch::makeIbInsideFaces() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibInsideFacesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -819,8 +807,6 @@ void Foam::immersedBoundaryFvPatch::makeIbInternalFaces() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibInternalFacesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -914,8 +900,6 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibPointsPtr_ || ibNormalsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1009,8 +993,6 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if
     (
         ibCellCellsPtr_
@@ -1492,8 +1474,6 @@ void Foam::immersedBoundaryFvPatch::makeDeadCells() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (deadCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1527,8 +1507,6 @@ void Foam::immersedBoundaryFvPatch::makeDeadCellsExt() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (deadCellsExtPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1561,8 +1539,6 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (deadFacesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1645,8 +1621,6 @@ void Foam::immersedBoundaryFvPatch::makeLiveCells() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (liveCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1679,8 +1653,6 @@ void Foam::immersedBoundaryFvPatch::makeIbCellSizes() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibCellSizesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1726,8 +1698,6 @@ void Foam::immersedBoundaryFvPatch::makeIbSf() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibSfPtr_ || ibMagSfPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1752,8 +1722,6 @@ void Foam::immersedBoundaryFvPatch::makeIbDelta() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (ibDeltaPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1778,8 +1746,6 @@ void Foam::immersedBoundaryFvPatch::makeTriSf() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (triSfPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)

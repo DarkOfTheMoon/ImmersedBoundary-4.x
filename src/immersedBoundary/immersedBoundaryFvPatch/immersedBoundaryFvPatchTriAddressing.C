@@ -36,8 +36,6 @@ void Foam::immersedBoundaryFvPatch::makeTriAddressing() const
             << endl;
     }
 
-    // It is an error to attempt to recalculate
-    // if the pointer is already set
     if (cellsToTriAddrPtr_ || cellsToTriWeightsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
