@@ -2,16 +2,16 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,8 +19,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -217,13 +216,8 @@ immersedBoundaryFvPatchField<Type>::imposeDirichletCondition() const
 
     if (counter == nBcIter_ && debug)
     {
-        InfoIn
-        (
-            "template<class Type>\n"
-            "tmp<Foam::Field<Type> >\n"
-            "immersedBoundaryFvPatchField<Type>::"
-            "imposeDirichletCondition() const"
-        )   << this->dimensionedInternalField().name()
+        InfoIn(__PRETTY_FUNCTION__)
+            << this->dimensionedInternalField().name()
             << " for patch " << this->patch().name()
             << ", error, max: " << gMax(error)
             << ", min: " << gMin(error)
@@ -366,13 +360,8 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
 
     if (counter == nBcIter_ && debug)
     {
-        InfoIn
-        (
-            "template<class Type>\n"
-            "tmp<Foam::Field<Type> >\n"
-            "immersedBoundaryFvPatchField<Type>::"
-            "imposeNeumannCondition() const"
-        )   << this->dimensionedInternalField().name()
+        InfoIn(__PRETTY_FUNCTION__)
+            << this->dimensionedInternalField().name()
             << " for patch " << this->patch().name()
             << ", error, max: " << gMax(error)
             << ", min: " << gMin(error)
@@ -632,17 +621,8 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
     // HJ, 12/Apr/2012
     if (!isType<immersedBoundaryFvPatch>(p))
     {
-        FatalErrorIn
-        (
-            "immersedBoundaryFvPatchField<Type>::"
-            "immersedBoundaryFvPatchField\n"
-            "(\n"
-            "    const immersedBoundaryFvPatchField<Type>&,\n"
-            "    const fvPatch& p,\n"
-            "    const DimensionedField<Type, volMesh>& iF,\n"
-            "    const fvPatchFieldMapper& mapper\n"
-            ")\n"
-        )   << "\n    patch type '" << p.type()
+        FatalErrorIn(__PRETTY_FUNCTION__)
+            << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()

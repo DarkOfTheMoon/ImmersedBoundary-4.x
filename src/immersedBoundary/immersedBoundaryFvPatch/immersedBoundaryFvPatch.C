@@ -2,16 +2,16 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,8 +19,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -48,7 +47,7 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeGamma() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "creating fluid cells indicator "
             << "for immersed boundary" << name()
             << endl;
@@ -58,7 +57,7 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
     // if the pointer is already set
     if (gammaPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeGamma() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "fluid cells indicator already exist"
             << "for immersed boundary" << name()
             << abort(FatalError);
@@ -106,7 +105,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeGammaExt() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "creating extended fluid cells indicator "
             << "for immersed boundary " << name()
             << endl;
@@ -116,7 +115,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
     // if the pointer is already set
     if (gammaExtPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeGammaExt() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "extended fluid cells indicator already exist "
             << "for immersed boundary " << name()
             << abort(FatalError);
@@ -181,7 +180,7 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeSGamma() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "creating fluid faces indicator "
             << "for immersed boundary " << name()
             << endl;
@@ -191,7 +190,7 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
     // if the pointer is already set
     if (sGammaPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeSGamma() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "fluid faces indicator already exist "
             << "for immersed boundary " << name()
             << abort(FatalError);
@@ -335,7 +334,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCells() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbCells() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of cells next to immersed boundary "
             << "for immersed boundary " << name()
             << endl;
@@ -345,7 +344,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCells() const
     // if the pointer is already set
     if (ibCellsPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbCells() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of cells next to immersed boundary already exist "
             << "for immersed boundary " << name()
             << abort(FatalError);
@@ -440,7 +439,7 @@ void Foam::immersedBoundaryFvPatch::addIbCornerCells() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::addIbCornerCells() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "add cells next to sharp corner "
             << "for immersed boundary " << name()
             << endl;
@@ -605,7 +604,7 @@ void Foam::immersedBoundaryFvPatch::makeIbFaces() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbFaces() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of faces next to immersed boundary "
             << "for immersed boundary " << name()
             << endl;
@@ -615,7 +614,7 @@ void Foam::immersedBoundaryFvPatch::makeIbFaces() const
     // if the pointer is already set
     if (ibFacesPtr_ || ibFaceCellsPtr_ || ibFaceFlipsPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbFaces() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of faces next to immersed boundary already exist "
             << "for immersed boundary " << name()
             << abort(FatalError);
@@ -728,7 +727,7 @@ void Foam::immersedBoundaryFvPatch::makeIbInsideFaces() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbInsideFaces() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of faces next to immersed boundary "
             << "for immersed boundary " << name()
             << endl;
@@ -738,7 +737,7 @@ void Foam::immersedBoundaryFvPatch::makeIbInsideFaces() const
     // if the pointer is already set
     if (ibInsideFacesPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbInsideFaces() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of faces next to immersed boundary already exist "
             << "for immersed boundary " << name()
             << abort(FatalError);
@@ -815,7 +814,7 @@ void Foam::immersedBoundaryFvPatch::makeIbInternalFaces() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbInternalFaces() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of faces next to immersed boundary"
             << endl;
     }
@@ -824,7 +823,7 @@ void Foam::immersedBoundaryFvPatch::makeIbInternalFaces() const
     // if the pointer is already set
     if (ibInternalFacesPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbInternalFaces() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of faces next to immersed boundary already exist"
             << abort(FatalError);
     }
@@ -909,10 +908,8 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
 {
     if (debug)
     {
-        InfoIn
-        (
-            "void immersedBoundaryFvPatch::makeIbPointsAndNormals() const"
-        )   << "create immersed  boundary points and normals "
+        InfoIn(__PRETTY_FUNCTION__)
+            << "create immersed  boundary points and normals "
             << "for immersed boundary " << name()
             << endl;
     }
@@ -921,10 +918,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
     // if the pointer is already set
     if (ibPointsPtr_ || ibNormalsPtr_)
     {
-        FatalErrorIn
-        (
-            "immersedBoundaryFvPatch::makeIbPointsAndNormals() const"
-        )
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "immersed boundary points and normals already exist"
             << "for immersed boundary " << name()
             << abort(FatalError);
@@ -985,10 +979,8 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
         }
         else
         {
-            FatalErrorIn
-            (
-                "immersedBoundaryFvPatch::makeIbPointsAndNormals() const"
-            )   << "Can't find nearest triSurface point for cell "
+            FatalErrorIn(__PRETTY_FUNCTION__)
+                << "Can't find nearest triSurface point for cell "
                 << ibc[cellI] << ", "
                 << mesh_.cellCentres()[ibc[cellI]]
                 << abort(FatalError);
@@ -1000,10 +992,8 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
          && mag(C[ibc[cellI]].z() - ibPoints[cellI].z()) > SMALL
         )
         {
-            FatalErrorIn
-            (
-                "immersedBoundaryFvPatch::makeIbPointsAndNormals() const"
-            )   << "Intersection point is not on symmetry plane "
+            FatalErrorIn(__PRETTY_FUNCTION__)
+                << "Intersection point is not on symmetry plane "
                 << "for 2-D geometry" << abort(FatalError);
         }
     }
@@ -1014,7 +1004,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbCellCells() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create neighbour cells for ib cells"
             << endl;
     }
@@ -1028,10 +1018,8 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
      || ibCellProcCellsPtr_
     )
     {
-        FatalErrorIn
-        (
-            "immersedBoundaryFvPatch::makeIbCellCells() const"
-        )   << "cell-cell addressing already exists"
+        FatalErrorIn(__PRETTY_FUNCTION__)
+            << "cell-cell addressing already exists"
             << abort(FatalError);
     }
 
@@ -1306,7 +1294,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
         // Find cells needed by other processors
         if (ibProcCellsPtr_)
         {
-            FatalErrorIn("immersedBoundaryFvPatch::makeIbCellCells() const")
+            FatalErrorIn(__PRETTY_FUNCTION__)
                 << "procCells addressing already exists"
                 << abort(FatalError);
         }
@@ -1327,10 +1315,8 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
 
                     if (nearestCellID == -1)
                     {
-                        FatalErrorIn
-                        (
-                            "immersedBoundaryFvPatch::makeIbCellCells() const"
-                        ) << "Can't find nearest cell."
+                        FatalErrorIn(__PRETTY_FUNCTION__)
+                            << "Can't find nearest cell."
                             << abort(FatalError);
                     }
 
@@ -1501,7 +1487,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadCells() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeDeadCells() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of dead cells"
             << endl;
     }
@@ -1510,7 +1496,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadCells() const
     // if the pointer is already set
     if (deadCellsPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeDeadCells() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of dead cells already exist"
             << abort(FatalError);
     }
@@ -1536,7 +1522,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadCellsExt() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeDeadCellsExt() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create extended list of dead cells"
             << endl;
     }
@@ -1545,7 +1531,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadCellsExt() const
     // if the pointer is already set
     if (deadCellsExtPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeDeadCellsExt() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "extended list of dead cells already exist"
             << abort(FatalError);
     }
@@ -1570,7 +1556,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeDeadFaces() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of dead cells"
             << endl;
     }
@@ -1579,7 +1565,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
     // if the pointer is already set
     if (deadFacesPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeDeadFaces() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of dead cells already exist"
             << abort(FatalError);
     }
@@ -1654,7 +1640,7 @@ void Foam::immersedBoundaryFvPatch::makeLiveCells() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeLiveCells() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create list of live cells"
             << endl;
     }
@@ -1663,7 +1649,7 @@ void Foam::immersedBoundaryFvPatch::makeLiveCells() const
     // if the pointer is already set
     if (liveCellsPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeLiveCells() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "list of live cells already exist"
             << abort(FatalError);
     }
@@ -1688,7 +1674,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellSizes() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbCellsSize() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "create average sizes of immersed boundary cells"
             << endl;
     }
@@ -1697,7 +1683,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellSizes() const
     // if the pointer is already set
     if (ibCellSizesPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbCellsSize() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "average sizes of immersed boundary cells already exist"
             << abort(FatalError);
     }
@@ -1735,7 +1721,7 @@ void Foam::immersedBoundaryFvPatch::makeIbSf() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbSf() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "creating delta field"
             << endl;
     }
@@ -1744,7 +1730,7 @@ void Foam::immersedBoundaryFvPatch::makeIbSf() const
     // if the pointer is already set
     if (ibSfPtr_ || ibMagSfPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbSf() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "ibSf and ibMagSf field already exist"
             << abort(FatalError);
     }
@@ -1761,7 +1747,7 @@ void Foam::immersedBoundaryFvPatch::makeIbDelta() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeIbDelta() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "creating delta field"
             << endl;
     }
@@ -1770,7 +1756,7 @@ void Foam::immersedBoundaryFvPatch::makeIbDelta() const
     // if the pointer is already set
     if (ibDeltaPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeIbDelta() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "delta field already exist"
             << abort(FatalError);
     }
@@ -1787,7 +1773,7 @@ void Foam::immersedBoundaryFvPatch::makeTriSf() const
 {
     if (debug)
     {
-        InfoIn("void immersedBoundaryFvPatch::makeTriSf() const")
+        InfoIn(__PRETTY_FUNCTION__)
             << "creating delta field"
             << endl;
     }
@@ -1796,7 +1782,7 @@ void Foam::immersedBoundaryFvPatch::makeTriSf() const
     // if the pointer is already set
     if (triSfPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeTriSf() const")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "triSf field already exist"
             << abort(FatalError);
     }

@@ -2,16 +2,16 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,8 +19,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -134,7 +133,8 @@ immersedBoundaryOmegaWallFunctionFvPatchScalarField
 }
 
 
-immersedBoundaryOmegaWallFunctionFvPatchScalarField::immersedBoundaryOmegaWallFunctionFvPatchScalarField
+immersedBoundaryOmegaWallFunctionFvPatchScalarField::
+immersedBoundaryOmegaWallFunctionFvPatchScalarField
 (
     const immersedBoundaryOmegaWallFunctionFvPatchScalarField& owfpsf,
     const DimensionedField<scalar, volMesh>& iF
@@ -168,7 +168,7 @@ void immersedBoundaryOmegaWallFunctionFvPatchScalarField::updateCoeffs()
     // HJ, 20/Mar/2011
     if (!db().foundObject<volScalarField>(GName_))
     {
-        InfoIn("void immersedBoundaryOmegaWallFunctionFvPatchScalarField::updateCoeffs()")
+        InfoIn(__PRETTY_FUNCTION__)
             << "Cannot access " << GName_ << " field.  for patch "
             << patch().name() << ".  Evaluating as zeroGradient"
             << endl;
@@ -244,7 +244,10 @@ void immersedBoundaryOmegaWallFunctionFvPatchScalarField::updateCoeffs()
 }
 
 
-void immersedBoundaryOmegaWallFunctionFvPatchScalarField::write(Ostream& os) const
+void immersedBoundaryOmegaWallFunctionFvPatchScalarField::write
+(
+    Ostream& os
+) const
 {
     immersedBondaryFvPatchField<scalar>::write(os);
     writeEntryIfDifferent<word>(os, "U", "U", UName_);

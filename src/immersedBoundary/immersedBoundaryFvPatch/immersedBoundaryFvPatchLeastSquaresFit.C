@@ -2,16 +2,16 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,8 +19,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -75,7 +74,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
     // if the pointer is already set
     if (invDirichletMatricesPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeInvDirichletMatrices()")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "immersed boundary inverse least squares matrices already exist"
             << abort(FatalError);
     }
@@ -117,10 +116,8 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
 
         if (allPoints.size() < nCoeffs)
         {
-            FatalErrorIn
-            (
-                "void immersedBoundaryFvPatch::makeInvDirichletMatrices()"
-            )   << "allPoints.size() < " << nCoeffs << " : "
+            FatalErrorIn(__PRETTY_FUNCTION__)
+                << "allPoints.size() < " << nCoeffs << " : "
                 << allPoints.size() << abort(FatalError);
         }
 
@@ -283,10 +280,8 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
 
     if (debug)
     {
-        InfoIn
-        (
-            "void immersedBoundaryFvPatch::makeInvDirichletMatrices() const"
-        )   << "Max Dirichlet matrix condition number: "
+        InfoIn(__PRETTY_FUNCTION__)
+            << "Max Dirichlet matrix condition number: "
             << gMax(conditionNumber) << endl;
     }
 }
@@ -305,7 +300,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
     // if the pointer is already set
     if (invNeumannMatricesPtr_)
     {
-        FatalErrorIn("immersedBoundaryFvPatch::makeInvNeumannMatrices()")
+        FatalErrorIn(__PRETTY_FUNCTION__)
             << "immersed boundary inverse least squares matrices already exist"
             << abort(FatalError);
     }
@@ -589,10 +584,8 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
 
     if (debug)
     {
-        InfoIn
-        (
-            "void immersedBoundaryFvPatch::makeInvNeumannMatrices() const"
-        )   << "Max Neumann matrix condition number: "
+        InfoIn(__PRETTY_FUNCTION__)
+            << "Max Neumann matrix condition number: "
             << gMax(conditionNumber) << endl;
     }
 }

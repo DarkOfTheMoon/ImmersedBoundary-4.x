@@ -2,16 +2,16 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,8 +19,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -114,15 +113,8 @@ Foam::immersedBoundaryFvPatch::toIbPoints
 {
     if (triValues.size() != ibMesh().size())
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "Foam::tmp<Foam::Field<Type> >\n"
-            "immersedBoundaryFvPatch::toIbPoints\n"
-            "(\n"
-            "    const Field<Type>& triValues\n"
-            ") const"
-        )   << "Field size does not correspond to size of immersed boundary "
+        FatalErrorIn(__PRETTY_FUNCTION__)
+            << "Field size does not correspond to size of immersed boundary "
             << "triangulated surface for patch " << name() << nl
             << "Field size = " << triValues.size()
             << " surface size = " << ibMesh().size()
@@ -171,15 +163,8 @@ Foam::immersedBoundaryFvPatch::toTriFaces
 {
     if (ibValues.size() != ibCells().size())
     {
-        FatalErrorIn
-        (
-            "template<class Type>\n"
-            "Foam::tmp<Foam::Field<Type> >\n"
-            "immersedBoundaryFvPatch::toTriFaces\n"
-            "(\n"
-            "    const Field<Type>& ibValues\n"
-            ") const"
-        )   << "Field size does not correspond to size of IB points "
+        FatalErrorIn(__PRETTY_FUNCTION__)
+            << "Field size does not correspond to size of IB points "
             << "triangulated surface for patch " << name() << nl
             << "Field size = " << size()
             << " IB points size = " << ibCells().size()
