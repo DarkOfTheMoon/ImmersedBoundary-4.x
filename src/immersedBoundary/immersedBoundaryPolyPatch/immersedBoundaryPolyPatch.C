@@ -144,17 +144,8 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
 {
     if (size() > 0)
     {
-        FatalIOErrorIn
-        (
-            "immersedBoundaryPolyPatch::immersedBoundaryPolyPatch\n"
-            "(\n"
-            "    const word& name,\n"
-            "    const dictionary& dict,\n"
-            "    const label index,\n"
-            "    const polyBoundaryMesh& bm\n"
-            ")",
-            dict
-        )   << "Faces detected in the immersedBoundaryPolyPatch.  "
+        FatalIOErrorIn(__PRETTY_FUNCTION__, dict)
+            << "Faces detected in the immersedBoundaryPolyPatch.  "
             << "This is not allowed: please make sure that the patch size "
             << "equals zero."
             << abort(FatalIOError);

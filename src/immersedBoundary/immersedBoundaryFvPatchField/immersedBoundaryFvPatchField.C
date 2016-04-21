@@ -577,17 +577,8 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
 {
     if (!isType<immersedBoundaryFvPatch>(p))
     {
-        FatalIOErrorIn
-        (
-            "immersedBoundaryFvPatchField<Type>::"
-            "immersedBoundaryFvPatchField\n"
-            "(\n"
-            "    const fvPatch& p,\n"
-            "    const Field<Type>& field,\n"
-            "    const dictionary& dict\n"
-            ")\n",
-            dict
-        )   << "\n    patch type '" << p.type()
+        FatalIOErrorIn(__PRETTY_FUNCTION__, dict)
+            << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
             << " of field " << this->dimensionedInternalField().name()
