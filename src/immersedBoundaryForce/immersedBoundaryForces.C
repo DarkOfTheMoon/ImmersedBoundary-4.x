@@ -2,16 +2,16 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
     This file is part of OpenFOAM.
 
-    OpenFOAM is free software; you can redistribute it and/or modify it
-    under the terms of the GNU General Public License as published by the
-    Free Software Foundation; either version 2 of the License, or (at your
-    option) any later version.
+    OpenFOAM is free software: you can redistribute it and/or modify it
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
     OpenFOAM is distributed in the hope that it will be useful, but WITHOUT
     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
@@ -19,8 +19,7 @@ License
     for more details.
 
     You should have received a copy of the GNU General Public License
-    along with OpenFOAM; if not, write to the Free Software Foundation,
-    Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+    along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 \*---------------------------------------------------------------------------*/
 
@@ -67,14 +66,16 @@ Foam::immersedBoundaryForces::~immersedBoundaryForces()
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-Foam::immersedBoundaryForces::forcesMoments
-Foam::immersedBoundaryForces::calcForcesMoment() const
+void Foam::immersedBoundaryForces::calcForcesMoment()
 {
-    forcesMoments fm
-    (
-        pressureViscous(vector::zero, vector::zero),
-        pressureViscous(vector::zero, vector::zero)
-    );
+    force_[0] = vector::zero;
+    force_[1] = vector::zero;
+    force_[2] = vector::zero;
+
+    moment_[0] = vector::zero;
+    moment_[1] = vector::zero;
+    moment_[2] = vector::zero;
+
 
     if (directForceDensity_)
     {
@@ -114,7 +115,7 @@ Foam::immersedBoundaryForces::calcForcesMoment() const
                 scalarField sA = mag(Sfb);
 
                 // Calculate distance for triangles
-                vectorField Md = ibPatch.triCf() - CofR_;
+                vectorField Md = ibPatch.triCf() - coordSys_.origin();
 
                 // Normal force =
                 // surfaceNormal*(surfaceUnitNormal & forceDensity)
@@ -128,14 +129,14 @@ Foam::immersedBoundaryForces::calcForcesMoment() const
                         ibPatch.ibNormals() & fDpatch.ibValue()
                     );
 
-                fm.first().first() += sum(fN);
-                fm.second().first() += sum(Md ^ fN);
+                force_[0] += sum(fN);
+                moment_[0] += sum(Md ^ fN);
 
                 // Tangential force (total force minus normal fN)
                 vectorField fT = sA*fDpatch.triValue() - fN;
 
-                fm.first().second() += sum(fT);
-                fm.second().second() += sum(Md ^ fT);
+                force_[1] += sum(fT);
+                moment_[1] += sum(Md ^ fT);
             }
         }
     }
@@ -189,14 +190,14 @@ Foam::immersedBoundaryForces::calcForcesMoment() const
                 scalarField sA = mag(Sfb);
 
                 // Calculate distance for triangles
-                vectorField Md = ibPatch.triCf() - CofR_;
+                vectorField Md = ibPatch.triCf() - coordSys_.origin();
 
                 // Pressure force is an integral of interpolated pressure
                 // on triangular faces
                 vectorField pf = Sfb*(pPatch.triValue() - pRef);
 
-                fm.first().first() += rho(p)*sum(pf);
-                fm.second().first() += rho(p)*sum(Md ^ pf);
+                force_[0] += rho(p)*sum(pf);
+                moment_[0] += rho(p)*sum(Md ^ pf);
 
                 // Shear force is dotted with a normal in the IB point
                 // and integrated on triangular faces
@@ -207,15 +208,16 @@ Foam::immersedBoundaryForces::calcForcesMoment() const
                         ibPatch.ibNormals() & stress[patchI]
                     );
 
-                fm.first().second() += sum(vf);
-                fm.second().second() += sum(Md ^ vf);
+                force_[1] += sum(vf);
+                moment_[1] += sum(Md ^ vf);
             }
         }
     }
 
-    reduce(fm, sumOp());
-
-    return fm;
+    Pstream::listCombineGather(force_, plusEqOp<vectorField>());
+    Pstream::listCombineGather(moment_, plusEqOp<vectorField>());
+    Pstream::listCombineScatter(force_);
+    Pstream::listCombineScatter(moment_);
 }
 
 
