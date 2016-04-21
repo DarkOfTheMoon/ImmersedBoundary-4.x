@@ -95,12 +95,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
 
     const FieldField<Field, vector>& procC = ibProcCentres();
 
-    label nCoeffs = 5;
-
-    if (mesh_.nGeometricD() == 3)
-    {
-        nCoeffs += 4;
-    }
+    const label nCoeffs = mesh_.nGeometricD()==3 ? 9 : 5;
 
     forAll (idm, cellI)
     {
@@ -291,8 +286,8 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
 {
     if (debug)
     {
-        Info<< "immersedBoundaryFvPatch::makeInvNeumannMatrices() : "
-            << "making immersed boundary inverse least sqares matrices"
+        InfoIn(__PRETTY_FUNCTION__)
+            << "Making immersed boundary inverse least sqares matrices"
             << endl;
     }
 
@@ -326,12 +321,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
 
     const FieldField<Field, vector>& procC = ibProcCentres();
 
-    label nCoeffs = 6;
-
-    if (mesh_.nGeometricD() == 3)
-    {
-        nCoeffs += 4;
-    }
+    const label nCoeffs = mesh_.nGeometricD()==3 ? 10 : 6;
 
     forAll (inm, cellI)
     {

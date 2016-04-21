@@ -109,11 +109,7 @@ immersedBoundaryFvPatchField<Type>::imposeDirichletCondition() const
     const vectorField& C = mesh_.cellCentres();
 
     // Dimension the matrix
-    label nCoeffs = 5;
-    if (mesh_.nGeometricD() == 3)
-    {
-        nCoeffs += 4;
-    }
+    const label nCoeffs = mesh_.nGeometricD() == 3 ? 9 : 5;
 
     label counter = 0;
     scalarField error(ibc.size(), 0);
@@ -263,11 +259,7 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
     const vectorField& C = mesh_.cellCentres();
 
     // Dimension the matrix
-    label nCoeffs = 6;
-    if (mesh_.nGeometricD() == 3)
-    {
-        nCoeffs += 4;
-    }
+    const label nCoeffs = mesh_.nGeometricD()==3 ? 10 : 6;
 
     label counter = 0;
     scalarField error(ibc.size(), 0);
