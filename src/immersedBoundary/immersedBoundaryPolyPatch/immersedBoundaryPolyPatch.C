@@ -63,6 +63,7 @@ void Foam::immersedBoundaryPolyPatch::makeTriSurfSearch() const
             << abort(FatalError);
     }
 
+/*
     const IOdictionary tio
     (
         IOobject
@@ -74,8 +75,8 @@ void Foam::immersedBoundaryPolyPatch::makeTriSurfSearch() const
             IOobject::NO_WRITE
         )
     );
-
-    triSurfSearchPtr_ = new triSurfaceSearch(ibMesh_,tio);
+*/
+    triSurfSearchPtr_ = new triSurfaceSearch(ibMesh_.surface());
 }
 
 
