@@ -1,11 +1,10 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.4                                   |
-|   \\  /    A nd           | Web:      http://www.openfoam.org               |
+|  \\    /   O peration     | Version:  2.3.0                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
-
 FoamFile
 {
     version         2.0;
@@ -69,29 +68,37 @@ edges
     arc 12 15 (0 -1 0.4)
 );
 
-patches         
+boundary
 (
-    wall cylinder
-    (
-        (12 13 5 4)
-        (13 14 6 5)
-        (14 15 7 6)
-        (15 12 4 7)
-    )
-    empty frontAndBack 
-    (
-        (3 2 1 0)
-        (0 1 5 4)
-        (1 2 6 5)
-        (2 3 7 6)
-        (3 0 4 7)
+    cylinder
+    {
+        type wall;
+        faces
+        (
+            (12 13 5 4)
+            (13 14 6 5)
+            (14 15 7 6)
+            (15 12 4 7)
+        );
+    }
+    frontAndBack
+    {
+        type empty;
+        faces
+        (
+            (3 2 1 0)
+            (0 1 5 4)
+            (1 2 6 5)
+            (2 3 7 6)
+            (3 0 4 7)
 
-        (9 10 11 8)
-        (13 9 8 12)
-        (14 10 9 13)
-        (15 11 10 14)
-        (12 8 11 15)
-    )
+            (9 10 11 8)
+            (13 9 8 12)
+            (14 10 9 13)
+            (15 11 10 14)
+            (12 8 11 15)
+        );
+    }
 );
 
 mergePatchPairs 
