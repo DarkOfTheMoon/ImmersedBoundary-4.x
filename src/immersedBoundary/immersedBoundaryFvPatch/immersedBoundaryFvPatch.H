@@ -291,6 +291,10 @@ public:
         );
 
 
+    //- Destructor
+    ~immersedBoundaryFvPatch();
+
+
     // Member Functions
 
         // Access to immersed boundary components

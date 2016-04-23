@@ -2088,6 +2088,14 @@ Foam::immersedBoundaryFvPatch::immersedBoundaryFvPatch
 {}
 
 
+// * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
+
+Foam::immersedBoundaryFvPatch::~immersedBoundaryFvPatch()
+{
+    clearOut();
+}
+
+
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 const Foam::volScalarField& Foam::immersedBoundaryFvPatch::gamma() const
