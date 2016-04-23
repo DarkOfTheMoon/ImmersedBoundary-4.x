@@ -5,5 +5,5 @@
 
 cleanCase
 
-rm -rf 0
+rm -rf 0 constant/triSurface
 cp -r save 0

@@ -9,4 +9,8 @@ runApplication blockMesh
 
 runApplication $application
 
+if [ ! -d "../cavity/constant/triSurface" ] ; then
+    mkdir ../cavity/constant/triSurface
+fi
+
 cp ibCylinder.* ../cavity/constant/triSurface

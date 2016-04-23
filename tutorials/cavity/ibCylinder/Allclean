@@ -4,5 +4,5 @@
 . $WM_PROJECT_DIR/bin/tools/CleanFunctions
 
 cleanCase
-rm -r immersedBoundary.*
+rm -f ibCylinder.*
 
