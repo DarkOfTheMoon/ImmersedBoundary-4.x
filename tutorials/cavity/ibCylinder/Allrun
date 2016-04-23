@@ -9,4 +9,4 @@ runApplication blockMesh
 
 runApplication $application
 
-cp immersedBoundary.* ../cavity/constant/triSurface
+cp ibCylinder.* ../cavity/constant/triSurface
