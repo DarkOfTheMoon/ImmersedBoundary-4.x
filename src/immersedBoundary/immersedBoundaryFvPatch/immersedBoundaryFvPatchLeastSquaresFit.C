@@ -208,7 +208,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs);
+        scalarSquareMatrix lsM(nCoeffs, nCoeffs, 0.);
 
         for (label i = 0; i < lsM.n(); i++)
         {
@@ -493,7 +493,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs);
+        scalarSquareMatrix lsM(nCoeffs, nCoeffs, 0.);
 
         for (label i = 0; i < lsM.n(); i++)
         {
