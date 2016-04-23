@@ -119,7 +119,7 @@ immersedBoundaryFvPatchField<Type>::imposeDirichletCondition() const
         counter++;
 
         // Parallel communication for psi
-        FieldField<Field, Type> procPsi = ibPatch_.sendAndReceive(psiI);
+        FieldField<Field, Type> procPsi(ibPatch_.sendAndReceive(psiI));
 
         forAll (ibc, cellI)
         {
@@ -269,7 +269,7 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
         counter++;
 
         // Parallel communication for psi
-        FieldField<Field, Type> procPsi = ibPatch_.sendAndReceive(psiI);
+        FieldField<Field, Type> procPsi(ibPatch_.sendAndReceive(psiI));
 
         forAll (ibc, cellI)
         {

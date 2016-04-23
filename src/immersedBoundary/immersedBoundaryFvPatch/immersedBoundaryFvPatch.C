@@ -228,7 +228,7 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
     const volScalarField::GeometricBoundaryField& gExtPatches =
         gExt.boundaryField();
 
-    volScalarField gIb = gExt - g;
+    volScalarField gIb(gExt - g);
     const scalarField& gIbIn = gIb.internalField();
 
     const volScalarField::GeometricBoundaryField& gIbPatches =

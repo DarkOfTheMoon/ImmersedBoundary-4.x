@@ -272,7 +272,7 @@ Foam::label Foam::refineImmersedBoundaryMesh::twoDNess() const
         {
             const vectorField& n = patch.faceAreas();
 
-            scalarField cosAngle = mag(n/mag(n) & cellPlane.normal());
+            scalarField cosAngle(mag(n/mag(n) & cellPlane.normal()));
 
             if (mag(min(cosAngle) - max(cosAngle)) > 1e-6)
             {
