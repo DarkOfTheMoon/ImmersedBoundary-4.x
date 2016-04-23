@@ -27,10 +27,9 @@ License
 #include "fvMesh.H"
 #include "volFields.H"
 
-Foam::scalarSquareMatrix LUinvert(Foam::scalarSquareMatrix& mat)
+Foam::scalarSquareMatrix LUinvert(Foam::scalarSquareMatrix& luMatrix)
 {
     using namespace Foam;
-    scalarSquareMatrix luMatrix = mat;
 
     scalarSquareMatrix luInvert(luMatrix.n());
     scalarField column(luMatrix.n());
