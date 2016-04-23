@@ -269,9 +269,11 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
             scalarField& gP = sGammaPatches[patchI];
 
             // For coupled patches, check gammaExt
-            scalarField gammaOwn = gExtPatches[patchI].patchInternalField();
+            const scalarField& gammaOwn =
+                gExtPatches[patchI].patchInternalField();
 
-            scalarField gammaNei = gExtPatches[patchI].patchNeighbourField();
+            const scalarField& gammaNei =
+                gExtPatches[patchI].patchNeighbourField();
 
             forAll (gammaOwn, faceI)
             {
@@ -286,9 +288,11 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
             }
 
             // For coupled patches, kill IB
-            scalarField gammaIbOwn = gIbPatches[patchI].patchInternalField();
+            const scalarField& gammaIbOwn =
+                gIbPatches[patchI].patchInternalField();
 
-            scalarField gammaIbNei = gIbPatches[patchI].patchNeighbourField();
+            const scalarField& gammaIbNei =
+                gIbPatches[patchI].patchNeighbourField();
 
             forAll (gammaOwn, faceI)
             {
@@ -307,7 +311,7 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
             // For regular patches, check live cells only to achieve
             // correct global mass adjustment.
             // HJ, 21/May/2012
-            scalarField gammaFc =
+            const scalarField& gammaFc =
                 g.boundaryField()[patchI].patchInternalField();
 
             scalarField& gP = sGammaPatches[patchI];
@@ -375,10 +379,10 @@ void Foam::immersedBoundaryFvPatch::makeIbCells() const
     {
         if (gE.boundaryField()[patchI].coupled())
         {
-            scalarField gammaExtOwn =
+            const scalarField& gammaExtOwn =
                 gE.boundaryField()[patchI].patchInternalField();
 
-            scalarField gammaExtNei =
+            const scalarField& gammaExtNei =
                 gE.boundaryField()[patchI].patchNeighbourField();
 
             const unallocLabelList& fCells =
@@ -669,10 +673,10 @@ void Foam::immersedBoundaryFvPatch::makeIbFaces() const
 
         if (gammaPatches[patchI].coupled())
         {
-            scalarField gammaOwn =
+            const scalarField& gammaOwn =
                 gammaPatches[patchI].patchInternalField();
 
-            scalarField gammaNei =
+            const scalarField& gammaNei =
                 gammaPatches[patchI].patchNeighbourField();
 
             forAll (gammaOwn, patchFaceI)
@@ -751,10 +755,10 @@ void Foam::immersedBoundaryFvPatch::makeIbInsideFaces() const
     {
         if (gE.boundaryField()[patchI].coupled())
         {
-            scalarField gammaOwn =
+            const scalarField& gammaOwn =
                 gE.boundaryField()[patchI].patchInternalField();
 
-            scalarField gammaNei =
+            const scalarField& gammaNei =
                 gE.boundaryField()[patchI].patchNeighbourField();
 
             label size = mesh_.boundaryMesh()[patchI].size();
@@ -842,10 +846,10 @@ void Foam::immersedBoundaryFvPatch::makeIbInternalFaces() const
     {
         if (gammaTmp.boundaryField()[patchI].coupled())
         {
-            scalarField gammaOwn =
+            const scalarField& gammaOwn =
                 gammaTmp.boundaryField()[patchI].patchInternalField();
 
-            scalarField gammaNei =
+            const scalarField& gammaNei =
                 gammaTmp.boundaryField()[patchI].patchNeighbourField();
 
             label size = mesh_.boundaryMesh()[patchI].size();
@@ -1574,10 +1578,10 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
 
         if (gEPatches[patchI].coupled())
         {
-            scalarField gammaExtOwn =
+            const scalarField& gammaExtOwn =
                 gEPatches[patchI].patchInternalField();
 
-            scalarField gammaExtNei =
+            const scalarField& gammaExtNei =
                 gEPatches[patchI].patchNeighbourField();
 
             forAll (gammaExtOwn, patchFaceI)
@@ -1594,7 +1598,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
         }
         else
         {
-            scalarField gammaExtOwn =
+            const scalarField& gammaExtOwn =
                 gEPatches[patchI].patchInternalField();
 
             forAll (gammaExtOwn, patchFaceI)
