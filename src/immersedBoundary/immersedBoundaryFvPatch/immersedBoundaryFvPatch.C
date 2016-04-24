@@ -134,7 +134,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
 
     scalarField& gammaExtI = gammaExtPtr_->internalField();
 
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
 
     // Mark cells that are inside or outside of the triangular surface
     boolList inside = ibPolyPatch_.triSurfSearch().calcInside(C);
@@ -931,7 +931,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
     vectorField& ibNormals = *ibNormalsPtr_;
     labelList& ibHitFaces = *hitFacesPtr_;
 
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
 
     const triSurfaceSearch& tss = ibPolyPatch_.triSurfSearch();
 
@@ -1027,7 +1027,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
     List<List<labelPair> >& cellProcCells = *ibCellProcCellsPtr_;
 
     const cellList& meshCells = mesh_.cells();
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
 
     scalarField rM(ibCellSizes());
     rM *= 3.5;
@@ -1783,7 +1783,7 @@ Foam::label Foam::immersedBoundaryFvPatch::findNearestCell
     const point& location
 ) const
 {
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
     const scalarField& gammaExtI = gammaExt().internalField();
 
     label nearestCellI = -1;
@@ -1920,7 +1920,7 @@ void Foam::immersedBoundaryFvPatch::findCellCells
     cellSet.erase(cellID);
 
     // Sorting cells
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
     curCells = cellSet.toc();
     scalarField distances(curCells.size(), 0);
     forAll (distances, cI)

@@ -77,7 +77,6 @@ class immersedBoundaryPolyPatch
 
     // Private Member Functions
 
-
         // Storage management
 
             //- Clear all demand-driven data

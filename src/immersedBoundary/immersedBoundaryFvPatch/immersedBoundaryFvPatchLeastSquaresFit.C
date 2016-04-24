@@ -86,7 +86,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
         new PtrList<scalarRectangularMatrix>(ibc.size());
     PtrList<scalarRectangularMatrix>& idm = *invDirichletMatricesPtr_;
 
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
 
     scalarField conditionNumber(ibc.size(), 0.0);
 
@@ -310,7 +310,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
         new PtrList<scalarRectangularMatrix>(ibc.size());
     PtrList<scalarRectangularMatrix>& inm = *invNeumannMatricesPtr_;
 
-    const vectorField& C = mesh_.C().internalField();
+    const vectorField& C = mesh_.cellCentres();
 
     scalarField conditionNumber(ibc.size(), 0);
 
