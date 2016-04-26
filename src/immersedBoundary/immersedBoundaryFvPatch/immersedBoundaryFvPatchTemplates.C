@@ -111,13 +111,13 @@ Foam::immersedBoundaryFvPatch::toIbPoints
     const Field<Type>& triValues
 ) const
 {
-    if (triValues.size() != ibMesh().size())
+    if (triValues.size() != surface().size())
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
             << "Field size does not correspond to size of immersed boundary "
             << "triangulated surface for patch " << name() << nl
             << "Field size = " << triValues.size()
-            << " surface size = " << ibMesh().size()
+            << " surface size = " << surface().size()
             << abort(FatalError);
     }
 

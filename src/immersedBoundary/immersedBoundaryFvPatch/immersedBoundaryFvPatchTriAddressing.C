@@ -45,7 +45,7 @@ void Foam::immersedBoundaryFvPatch::makeTriAddressing() const
     }
 
     // Get reference to tri patch and hit faces
-    const triSurface& triPatch = ibPolyPatch_.ibMesh();
+    const triSurface& triPatch = ibPolyPatch_.surface();
     const vectorField& triCentres = triPatch.faceCentres();
 
     const labelList& hf = hitFaces();

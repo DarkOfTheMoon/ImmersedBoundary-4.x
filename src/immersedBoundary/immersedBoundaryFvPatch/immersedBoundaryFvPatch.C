@@ -503,7 +503,7 @@ void Foam::immersedBoundaryFvPatch::addIbCornerCells() const
                 vector n =
                     triSurfaceTools::surfaceNormal
                     (
-                        ibPolyPatch_.ibMesh(),
+                        ibPolyPatch_.surface(),
                         pih.index(),
                         pih.hitPoint()
                     );
@@ -952,7 +952,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
             ibNormals[cellI] =
                 triSurfaceTools::surfaceNormal
                 (
-                    ibPolyPatch_.ibMesh(),
+                    ibPolyPatch_.surface(),
                     pih.index(),
                     pih.hitPoint()
                 );
@@ -1758,7 +1758,7 @@ void Foam::immersedBoundaryFvPatch::makeTriSf() const
     }
 
 
-    const triSurface& triMesh = ibPolyPatch_.ibMesh();
+    const triSurface& triMesh = ibPolyPatch_.surface();
     const pointField& triMeshPoints = triMesh.points();
 
     triSfPtr_ = new vectorField(triMesh.size());
@@ -2379,7 +2379,7 @@ const Foam::vectorField& Foam::immersedBoundaryFvPatch::triSf() const
 
 const Foam::vectorField& Foam::immersedBoundaryFvPatch::triCf() const
 {
-    return ibMesh().faceCentres();
+    return surface().faceCentres();
 }
 
 // ************************************************************************* //

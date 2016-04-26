@@ -48,6 +48,7 @@ scalar immersedBoundaryFvPatchField<Type>::bcTolerance_
     1e-6
 );
 
+
 // * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
 
 template<class Type>
@@ -219,11 +220,6 @@ immersedBoundaryFvPatchField<Type>::imposeDirichletCondition() const
             << ", min: " << gMin(error)
             << ", avg: "  << gAverage(error) << endl;
     }
-
-//     Info<< "Dirichlet condition on " << ibc.size() << " cells of field "
-//         << this->dimensionedInternalField().name() << " = "
-//         << polyPsi
-//         << endl;
 
     return tpolyPsi;
 }
@@ -538,8 +534,8 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
     fvPatchField<Type>(p, iF, Field<Type>(0)),
     ibPatch_(refCast<const immersedBoundaryFvPatch>(p)),
     mesh_(p.boundaryMesh().mesh()),
-    refValue_(ibPatch_.ibMesh().size(), pTraits<Type>::zero),
-    refGrad_(ibPatch_.ibMesh().size(), pTraits<Type>::zero),
+    refValue_(ibPatch_.surface().size(), pTraits<Type>::zero),
+    refGrad_(ibPatch_.surface().size(), pTraits<Type>::zero),
     fixesValue_(false),
     setDeadCellValue_(false),
     deadCellValue_(pTraits<Type>::zero),
@@ -559,8 +555,8 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
     fvPatchField<Type>(p, iF, Field<Type>(0)),
     ibPatch_(refCast<const immersedBoundaryFvPatch>(p)),
     mesh_(p.boundaryMesh().mesh()),
-    refValue_("refValue", dict, ibPatch_.ibMesh().size()),
-    refGrad_("refGradient", dict, ibPatch_.ibMesh().size()),
+    refValue_("refValue", dict, ibPatch_.surface().size()),
+    refGrad_("refGradient", dict, ibPatch_.surface().size()),
     fixesValue_(dict.lookup("fixesValue")),
     setDeadCellValue_(dict.lookup("setDeadCellValue")),
     deadCellValue_(pTraits<Type>(dict.lookup("deadCellValue"))),
@@ -795,7 +791,7 @@ void immersedBoundaryFvPatchField<Type>::write(Ostream& os) const
     // Write immersed boundary data as a vtk file
     autoPtr<surfaceWriter> writerPtr = surfaceWriter::New("vtk");
 
-    const triSurface& ts = ibPatch_.ibMesh();
+    const triSurface& ts = ibPatch_.surface();
 
     // Make a face list for writing
     faceList f(ts.size());

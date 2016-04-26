@@ -45,34 +45,6 @@ namespace Foam
 }
 
 
-// * * * * * * * * * * * * * Private Member Functions  * * * * * * * * * * * //
-
-void Foam::immersedBoundaryPolyPatch::makeTriSurfSearch() const
-{
-    if (debug)
-    {
-        Info<< "void immersedBoundaryPolyPatch::makeTriSurfSearch() const : "
-            << "creating triSurface search algorithm"
-            << endl;
-    }
-
-    if (triSurfSearchPtr_)
-    {
-        FatalErrorIn(__PRETTY_FUNCTION__)
-            << "triSurface search algorithm already exist"
-            << abort(FatalError);
-    }
-
-    triSurfSearchPtr_ = new triSurfaceSearch(ibMesh_.surface());
-}
-
-
-void Foam::immersedBoundaryPolyPatch::clearOut()
-{
-    deleteDemandDrivenData(triSurfSearchPtr_);
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
@@ -86,7 +58,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
 )
 :
     polyPatch(name, size, start, index, bm, patchType),
-    ibMesh_
+    surface_
     (
         IOobject
         (
@@ -98,8 +70,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
             IOobject::NO_WRITE
         )
     ),
-    internalFlow_(false),
-    triSurfSearchPtr_(NULL)
+    internalFlow_(false)
 {}
 
 
@@ -113,7 +84,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
 )
 :
     polyPatch(name, dict, index, bm, patchType),
-    ibMesh_
+    surface_
     (
         IOobject
         (
@@ -125,8 +96,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
             IOobject::NO_WRITE
         )
     ),
-    internalFlow_(dict.lookup("internalFlow")),
-    triSurfSearchPtr_(NULL)
+    internalFlow_(dict.lookup("internalFlow"))
 {
     if (size() > 0)
     {
@@ -146,7 +116,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
 )
 :
     polyPatch(pp, bm),
-    ibMesh_
+    surface_
     (
         IOobject
         (
@@ -158,8 +128,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
             IOobject::NO_WRITE
         )
     ),
-    internalFlow_(pp.internalFlow()),
-    triSurfSearchPtr_(NULL)
+    internalFlow_(pp.internalFlow())
 {}
 
 
@@ -173,7 +142,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
 )
 :
     polyPatch(pp, bm, index, newSize, newStart),
-    ibMesh_
+    surface_
     (
         IOobject
         (
@@ -185,8 +154,7 @@ Foam::immersedBoundaryPolyPatch::immersedBoundaryPolyPatch
             IOobject::NO_WRITE
         )
     ),
-    internalFlow_(pp.internalFlow()),
-    triSurfSearchPtr_(NULL)
+    internalFlow_(pp.internalFlow())
 {}
 
 
@@ -199,18 +167,6 @@ Foam::immersedBoundaryPolyPatch::~immersedBoundaryPolyPatch()
 
 
 // * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * * //
-
-const Foam::triSurfaceSearch&
-Foam::immersedBoundaryPolyPatch::triSurfSearch() const
-{
-    if (!triSurfSearchPtr_)
-    {
-        makeTriSurfSearch();
-    }
-
-    return *triSurfSearchPtr_;
-}
-
 
 void Foam::immersedBoundaryPolyPatch::write(Ostream& os) const
 {
