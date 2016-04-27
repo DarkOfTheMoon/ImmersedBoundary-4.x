@@ -19,11 +19,15 @@ FoamFile
 (
     ibThickPlate
     {
-        type           immersedBoundary;
+        type            immersedBoundary;
         nFaces          0;
         startFace       21228;
 
         internalFlow    no;
+        IBSurfaceCoffs
+        {
+            type        staticIBSurface;
+        }
     }
     top
     {

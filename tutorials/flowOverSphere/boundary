@@ -24,6 +24,10 @@ FoamFile
         startFace       78300;
 
         internalFlow    no;
+        IBSurfaceCoffs
+        {
+            type        staticIBSurface;
+        }
     }
     in
     {

@@ -19,11 +19,15 @@ FoamFile
 (
     ibCylinder
     {
-        type           immersedBoundary;
+        type            immersedBoundary;
         nFaces          0;
         startFace       11100;
 
         internalFlow    no;
+        IBSurfaceCoffs
+        {
+            type        staticIBSurface;
+        }
     }
     left
     {
