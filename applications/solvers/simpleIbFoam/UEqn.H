@@ -1,12 +1,16 @@
-    // Solve the Momentum equation
+    // Momentum predictor
 
     tmp<fvVectorMatrix> UEqn
     (
         fvm::div(phi, U)
       + turbulence->divDevReff(U)
+      ==
+        fvOptions(U)
     );
 
     UEqn().relax();
+
+    fvOptions.constrain(UEqn());
 
     UEqn().boundaryManipulate(U.boundaryField());
 
@@ -16,3 +20,5 @@
     ).initialResidual();
 
     maxResidual = max(eqnResidual, maxResidual);
+
+    fvOptions.correct(U);

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -25,12 +25,8 @@ Application
     simpleIbFoam
 
 Description
-       with immersed boundary support.
-
-Author
-    Hrvoje Jasak, Wikki Ltd.  All rights reserved
-
- Steady-state solver for incompressible, turbulent flow
+    Steady-state solver for incompressible, turbulent flow with immersed
+    boundary support.
 
 \*---------------------------------------------------------------------------*/
 
@@ -38,6 +34,7 @@ Author
 #include "singlePhaseTransportModel.H"
 #include "RASModel.H"
 #include "simpleControl.H"
+#include "fvIOoptionList.H"
 #include "immersedBoundaryFvPatch.H"
 #include "immersedBoundaryAdjustPhi.H"
 
@@ -49,6 +46,7 @@ int main(int argc, char *argv[])
     #include "createTime.H"
     #include "createMesh.H"
     #include "createFields.H"
+    #include "createFvOptions.H"
     #include "immersedBoundaryInitContinuityErrs.H"
 
     simpleControl simple(mesh);

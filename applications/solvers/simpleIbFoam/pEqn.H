@@ -43,7 +43,7 @@
         }
     }
 
-#   include "immersedBoundaryContinuityErrs.H"
+    #include "immersedBoundaryContinuityErrs.H"
 
     // Explicitly relax pressure for momentum corrector
     p.relax();
@@ -51,4 +51,5 @@
     // Momentum corrector
     U -= rAU*fvc::grad(p);
     U.correctBoundaryConditions();
+    fvOptions.correct(U);
 }

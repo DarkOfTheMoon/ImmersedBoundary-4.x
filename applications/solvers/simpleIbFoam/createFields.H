@@ -1,4 +1,4 @@
-    Info << "Reading field p\n" << endl;
+    Info<< "Reading field p\n" << endl;
     volScalarField p
     (
         IOobject
@@ -12,7 +12,7 @@
         mesh
     );
 
-    Info << "Reading field U\n" << endl;
+    Info<< "Reading field U\n" << endl;
     volVectorField U
     (
         IOobject
@@ -26,13 +26,12 @@
         mesh
     );
 
-#   include "createPhi.H"
+    #include "createPhi.H"
 
 
     label pRefCell = 0;
     scalar pRefValue = 0.0;
     setRefCell(p, mesh.solutionDict().subDict("SIMPLE"), pRefCell, pRefValue);
-
 
     singlePhaseTransportModel laminarTransport(U, phi);
 
