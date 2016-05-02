@@ -14,11 +14,6 @@
 
     UEqn().boundaryManipulate(U.boundaryField());
 
-    eqnResidual = solve
-    (
-        UEqn() == -cellIbMask*fvc::grad(p)
-    ).initialResidual();
-
-    maxResidual = max(eqnResidual, maxResidual);
+    UEqn() == -cellIbMask*fvc::grad(p);
 
     fvOptions.correct(U);

@@ -59,8 +59,6 @@ int main(int argc, char *argv[])
     {
         Info<< "Time = " << runTime.timeName() << nl << endl;
 
-        #include "initConvergenceCheck.H"
-
         p.storePrevIter();
 
         // --- Pressure-velocity SIMPLE corrector
@@ -76,8 +74,6 @@ int main(int argc, char *argv[])
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
             << "  ClockTime = " << runTime.elapsedClockTime() << " s"
             << nl << endl;
-
-        #include "convergenceCheck.H"
     }
 
     Info<< "End\n" << endl;

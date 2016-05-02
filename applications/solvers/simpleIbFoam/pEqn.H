@@ -26,16 +26,7 @@
 
         pEqn.boundaryManipulate(p.boundaryField());
 
-        // Retain the residual from the first iteration
-        if (simple.nNonOrthCorr() == 0)
-        {
-            eqnResidual = pEqn.solve().initialResidual();
-            maxResidual = max(eqnResidual, maxResidual);
-        }
-        else
-        {
-            pEqn.solve();
-        }
+        pEqn.solve();
 
         if (simple.finalNonOrthogonalIter())
         {
