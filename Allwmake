@@ -1,3 +1,7 @@
 #!/bin/sh
+cd ${0%/*} || exit 1    # run from this directory
 
-cd ./src && ./Allwmake
+export IBM_SRC=`pwd`/src
+
+src/Allwmake $*
+applications/Allwmake $*

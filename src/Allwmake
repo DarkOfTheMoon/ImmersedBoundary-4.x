@@ -1,16 +1,5 @@
 #!/bin/sh
 set -x
 
-wmake surfaceNormal
-wmake surfaceInvertNormal
-
 wmake libso immersedBoundary
 wmake libso immersedBoundaryForce
-
-wmake makeTriSurfaceMesh
-wmake refineImmersedBoundaryMesh
-
-wmake potentialIbFoam
-wmake icoIbFoam
-wmake interIbFoam
-wmake simpleIbFoam
