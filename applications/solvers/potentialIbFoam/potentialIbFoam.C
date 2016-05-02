@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -30,6 +30,7 @@ Description
 \*---------------------------------------------------------------------------*/
 
 #include "fvCFD.H"
+#include "fvIOoptionList.H"
 #include "simpleControl.H"
 #include "immersedBoundaryFvPatch.H"
 #include "immersedBoundaryAdjustPhi.H"
@@ -44,15 +45,30 @@ int main(int argc, char *argv[])
         "Calculate and write the pressure field"
     );
 
+    argList::addBoolOption
+    (
+        "withFunctionObjects",
+        "execute functionObjects"
+    );
+
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
     #include "readControls.H"
     #include "createFields.H"
+    #include "createFvOptions.H"
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
     Info<< nl << "Calculating potential flow" << endl;
+
+    // Since solver contains no time loop it would never execute
+    // function objects so do it ourselves
+    runTime.functionObjects().start();
+
+    fvOptions.makeRelative(phi);
+
+    adjustPhi(phi, U, p);
 
     // Do correctors over the complete set
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
@@ -139,6 +155,8 @@ int main(int argc, char *argv[])
             << endl;
     }
 
+    fvOptions.makeAbsolute(phi);
+
     // Calculate velocity magnitude
     {
         volScalarField magU = cellIbMask*mag(U);
@@ -220,6 +238,8 @@ int main(int argc, char *argv[])
 
         p.write();
     }
+
+    runTime.functionObjects().end();
 
     Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"
         << "  ClockTime = " << runTime.elapsedClockTime() << " s"
