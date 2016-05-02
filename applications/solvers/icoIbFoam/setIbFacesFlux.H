@@ -17,7 +17,7 @@
 
                 if (curFace < mesh.nInternalFaces())
                 {
-                    phi.internalField()[curFace] = 
+                    phi.internalField()[curFace] =
                         phiU.internalField()[curFace];
                 }
                 else
@@ -26,7 +26,7 @@
                     label start = mesh.boundaryMesh()[patchID].start();
                     label localIndex = curFace - start;
 
-                    phi.boundaryField()[patchID][localIndex] = 
+                    phi.boundaryField()[patchID][localIndex] =
                         phi.boundaryField()[patchID][localIndex];
                 }
             }

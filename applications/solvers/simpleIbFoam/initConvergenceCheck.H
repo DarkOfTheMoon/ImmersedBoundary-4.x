@@ -4,4 +4,3 @@
     scalar convergenceCriterion = 0;
 
     simple.dict().readIfPresent("convergence", convergenceCriterion);
-

@@ -6,4 +6,3 @@ if (maxResidual < convergenceCriterion)
     runTime.writeAndEnd();
     Info<< "latestTime = " << runTime.timeName() << endl;
 }
-
