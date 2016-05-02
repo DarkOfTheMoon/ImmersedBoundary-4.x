@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
     adjustPhi(phi, U, p);
 
-    // Do correctors over the complete set
+    // Non-orthogonal velocity potential corrector loop
     for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
     {
         phi = faceIbMask*(linearInterpolate(U) & mesh.Sf());
@@ -105,57 +105,51 @@ int main(int argc, char *argv[])
 
         pEqn.solve();
 
-        // Correct the flux
-        phi -= pEqn.flux();
-
-        if (nonOrth != nNonOrthCorr)
+        if (nonOrth == nNonOrthCorr)
         {
-            p.relax();
+            phi -= pEqn.flux();
         }
-
-        Info<< "p min " << gMin(p.internalField())
-            << " max " << gMax(p.internalField())
-            << " masked min "
-            << gMin(cellIbMask.internalField()*p.internalField())
-            << " max "
-            << gMax(cellIbMask.internalField()*p.internalField())
-            << endl;
-
-        Info<< "continuity error = "
-            << mag
-               (
-                    fvc::div(faceIbMask*phi)
-               )().weightedAverage(mesh.V()).value()
-            << endl;
-
-        Info<< "Contour continuity error = "
-            << mag(sum(phi.boundaryField()))
-            << endl;
-
-        U = fvc::reconstruct(phi);
-        U.correctBoundaryConditions();
-
-        Info<< "Interpolated U error = "
-            << (
-                   sqrt
-                   (
-                       sum
-                       (
-                           sqr
-                           (
-                               faceIbMask*
-                               (
-                                   fvc::interpolate(U) & mesh.Sf()
-                               )
-                             - phi
-                           )
-                       )
-                   )/sum(mesh.magSf())
-               ).value()
-            << endl;
     }
 
     fvOptions.makeAbsolute(phi);
+
+
+    Info<< "p min " << gMin(p.internalField())
+        << " max " << gMax(p.internalField())
+        << " masked min "
+        << gMin(cellIbMask.internalField()*p.internalField())
+        << " max "
+        << gMax(cellIbMask.internalField()*p.internalField())
+        << endl;
+
+    Info<< "Continuity error = "
+        << mag(fvc::div(faceIbMask*phi))().weightedAverage(mesh.V()).value()
+        << endl;
+
+    Info<< "Contour continuity error = " << mag(sum(phi.boundaryField()))
+        << endl;
+
+    U = fvc::reconstruct(phi);
+    U.correctBoundaryConditions();
+
+    Info<< "Interpolated velocity error = "
+        << (
+                sqrt
+                (
+                    sum
+                    (
+                        sqr
+                        (
+                            faceIbMask*
+                            (
+                                fvc::interpolate(U) & mesh.Sf()
+                            )
+                            - phi
+                        )
+                    )
+                )/sum(mesh.magSf())
+            ).value()
+        << endl;
 
     // Calculate velocity magnitude
     {
