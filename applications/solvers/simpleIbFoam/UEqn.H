@@ -14,6 +14,6 @@
 
     UEqn().boundaryManipulate(U.boundaryField());
 
-    UEqn() == -cellIbMask*fvc::grad(p);
+    solve(UEqn() == -cellIbMask*fvc::grad(p));
 
     fvOptions.correct(U);
