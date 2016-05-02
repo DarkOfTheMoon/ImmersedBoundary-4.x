@@ -1,9 +1,9 @@
 {
     p.boundaryField().updateCoeffs();
 
-    volScalarField AU = UEqn().A();
+    volScalarField rAU(1.0/UEqn().A());
 
-    U = UEqn().H()/AU;
+    U = UEqn().H()*rAU;
     // Immersed boundary update
     U.correctBoundaryConditions();
 
@@ -15,11 +15,11 @@
     adjustPhi(phi, U, p);
 
     // Non-orthogonal pressure corrector loop
-    while(simple.correctNonOrthogonal())
+    while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(1.0/AU, p) == fvc::div(phi)
+            fvm::laplacian(rAU, p) == fvc::div(phi)
         );
 
         pEqn.setReference(pRefCell, pRefValue);
@@ -49,6 +49,6 @@
     p.relax();
 
     // Momentum corrector
-    U -= fvc::grad(p)/AU;
+    U -= rAU*fvc::grad(p);
     U.correctBoundaryConditions();
 }
