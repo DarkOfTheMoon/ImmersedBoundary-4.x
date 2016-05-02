@@ -3,14 +3,11 @@ EXE_INC = \
     -I$(LIB_SRC)/dynamicMesh/lnInclude \
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/triSurface/lnInclude \
-    -I$(LIB_SRC)/meshTools/lnInclude \
-    -I./refineImmersedBoundaryMesh/lnInclude
+    -I$(LIB_SRC)/meshTools/lnInclude
 
 EXE_LIBS = \
     -lfiniteVolume \
     -ltriSurface \
     -lmeshTools \
-    -lsurfMesh \
-    -lsampling \
     -ldynamicMesh \
-    -L$(FOAM_USER_LIBBIN) -limmersedBoundary
+    -limmersedBoundary
