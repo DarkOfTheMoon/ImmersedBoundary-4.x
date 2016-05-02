@@ -51,12 +51,8 @@ int main(int argc, char *argv[])
 
     forAll (mesh.boundaryMesh(), patchI)
     {
-        if
-        (
-            mesh.boundaryMesh()[patchI].type() 
-         == wallPolyPatch::typeName
-        )
-        includedPatches.insert(patchI);
+        if(mesh.boundaryMesh()[patchI].type() == wallPolyPatch::typeName)
+            includedPatches.insert(patchI);
     }
 
     triSurface triSurf =
