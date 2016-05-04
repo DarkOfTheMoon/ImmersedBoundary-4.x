@@ -19,7 +19,7 @@
         "phiHbyA",
         faceIbMask*(fvc::interpolate(HbyA) & mesh.Sf())
     );
-
+    fvOptions.makeRelative(phiHbyA);
     // Adjust immersed boundary fluxes
     immersedBoundaryAdjustPhi(phiHbyA, U);
     adjustPhi(phiHbyA, U, p_rgh);
@@ -56,6 +56,7 @@
 
             U = HbyA + rAU*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
             U.correctBoundaryConditions();
+            fvOptions.correct(U);
         }
     }
 

@@ -46,6 +46,7 @@ Author
 #include "immiscibleIncompressibleTwoPhaseMixture.H"
 #include "turbulenceModel.H"
 #include "pimpleControl.H"
+#include "fvIOoptionList.H"
 #include "immersedBoundaryFvPatch.H"
 #include "immersedBoundaryAdjustPhi.H"
 
@@ -95,8 +96,6 @@ int main(int argc, char *argv[])
             {
                 #include "pEqn.H"
             }
-
-            #include "limitU.H"
 
             // Recalculate the mass fluxes
             rhoPhi = phi*fvc::interpolate(rho);

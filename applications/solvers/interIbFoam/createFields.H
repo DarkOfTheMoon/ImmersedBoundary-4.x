@@ -68,7 +68,7 @@
             IOobject::NO_READ,
             IOobject::NO_WRITE
         ),
-        rho1*phi
+        fvc::interpolate(rho)*phi
     );
 
 
@@ -119,8 +119,10 @@
         p_rgh = p - rho*gh;
     }
 
+
+    fv::IOoptionList fvOptions(mesh);
+
     // Construct interface from alpha1 distribution
     interfaceProperties interface(alpha1, U, mixture);
 
-
-#   include "createIbMasks.H"
+    #include "createIbMasks.H"
