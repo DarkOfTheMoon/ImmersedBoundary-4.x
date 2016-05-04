@@ -62,6 +62,7 @@ int main(int argc, char *argv[])
     #include "immersedBoundaryInitContinuityErrs.H"
     #include "createFields.H"
     #include "readTimeControls.H"
+    #include "createPrghCorrTypes.H"
     #include "correctPhi.H"
     #include "CourantNo.H"
     #include "setInitialDeltaT.H"
