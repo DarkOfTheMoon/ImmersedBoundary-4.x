@@ -16,7 +16,7 @@
 
     surfaceScalarField phiHbyA
     (
-        "phiU",
+        "phiHbyA",
         faceIbMask*(fvc::interpolate(HbyA) & mesh.Sf())
     );
 
@@ -24,19 +24,22 @@
     immersedBoundaryAdjustPhi(phiHbyA, U);
     adjustPhi(phiHbyA, U, p_rgh);
 
-    phi = phiHbyA
-      + faceIbMask*
+    surfaceScalarField phig
+    (
+        faceIbMask*
         (
             mixture.surfaceTensionForce()
           - ghf*fvc::snGrad(rho)
-        )*rAUf*mesh.magSf();
+        )*rAUf*mesh.magSf()
+    );
 
+    phiHbyA += phig;
 
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix p_rghEqn
         (
-            fvm::laplacian(rAUf, p_rgh) == fvc::div(phi)
+            fvm::laplacian(rAUf, p_rgh) == fvc::div(phiHbyA)
         );
 
         p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
@@ -47,12 +50,12 @@
 
         if (pimple.finalNonOrthogonalIter())
         {
-            phi -= p_rghEqn.flux();
+            phi = phiHbyA - p_rghEqn.flux();
+
+            p_rgh.relax();
+
+            U = HbyA + rAU*fvc::reconstruct((phig - p_rghEqn.flux())/rAUf);
+            U.correctBoundaryConditions();
         }
     }
-
-    p_rgh.relax();
-
-    U = HbyA + rAU*fvc::reconstruct((phi - phiHbyA)/rAUf);
-    U.correctBoundaryConditions();
 }
