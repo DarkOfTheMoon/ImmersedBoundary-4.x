@@ -58,4 +58,18 @@
             U.correctBoundaryConditions();
         }
     }
+
+    #include "immersedBoundaryContinuityErrs.H"
+
+    p == p_rgh + cellIbMask*rho*gh;
+
+    if (p_rgh.needReference())
+    {
+        p += dimensionedScalar
+        (
+            "p",
+            p.dimensions(),
+            pRefValue - getRefCellValue(p, pRefCell)
+        );
+    }
 }

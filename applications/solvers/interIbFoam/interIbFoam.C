@@ -96,24 +96,10 @@ int main(int argc, char *argv[])
                 #include "pEqn.H"
             }
 
-            #include "immersedBoundaryContinuityErrs.H"
-
             #include "limitU.H"
 
             // Recalculate the mass fluxes
             rhoPhi = phi*fvc::interpolate(rho);
-
-            p = p_rgh + cellIbMask*rho*gh;
-
-            if (p_rgh.needReference())
-            {
-                p += dimensionedScalar
-                (
-                    "p",
-                    p.dimensions(),
-                    pRefValue - getRefCellValue(p, pRefCell)
-                );
-            }
 
             if (pimple.turbCorr())
             {
