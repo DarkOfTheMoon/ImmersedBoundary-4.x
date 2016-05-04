@@ -9,21 +9,22 @@
     volScalarField rAU("rAU", 1.0/UEqn.A());
     surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
 
-    U = rAU*UEqn.H();
-    // Immersed boundary update
-    U.correctBoundaryConditions();
+    volVectorField HbyA("HbyA", U);
+    HbyA = rAU*UEqn.H();
 
-    surfaceScalarField phiU
+    HbyA.correctBoundaryConditions();
+
+    surfaceScalarField phiHbyA
     (
         "phiU",
-        faceIbMask*(fvc::interpolate(U) & mesh.Sf())
+        faceIbMask*(fvc::interpolate(HbyA) & mesh.Sf())
     );
 
     // Adjust immersed boundary fluxes
-    immersedBoundaryAdjustPhi(phiU, U);
-    adjustPhi(phiU, U, p_rgh);
+    immersedBoundaryAdjustPhi(phiHbyA, U);
+    adjustPhi(phiHbyA, U, p_rgh);
 
-    phi = phiU
+    phi = phiHbyA
       + faceIbMask*
         (
             fvc::interpolate(interface.sigmaK())*fvc::snGrad(alpha1)
@@ -52,6 +53,6 @@
 
     p_rgh.relax();
 
-    U += rAU*fvc::reconstruct((phi - phiU)/rAUf);
+    U = HbyA + rAU*fvc::reconstruct((phi - phiHbyA)/rAUf);
     U.correctBoundaryConditions();
 }
