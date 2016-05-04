@@ -6,10 +6,10 @@
     }
 #endif
 
-    volScalarField rUA = 1.0/UEqn.A();
-    surfaceScalarField rUAf = fvc::interpolate(rUA);
+    volScalarField rAU("rAU", 1.0/UEqn.A());
+    surfaceScalarField rAUf("rAUf", fvc::interpolate(rAU));
 
-    U = rUA*UEqn.H();
+    U = rAU*UEqn.H();
     // Immersed boundary update
     U.correctBoundaryConditions();
 
@@ -28,14 +28,14 @@
         (
             fvc::interpolate(interface.sigmaK())*fvc::snGrad(alpha1)
           - ghf*fvc::snGrad(rho)
-        )*rUAf*mesh.magSf();
+        )*rAUf*mesh.magSf();
 
 
     while (pimple.correctNonOrthogonal())
     {
         fvScalarMatrix pdEqn
         (
-            fvm::laplacian(rUAf, pd) == fvc::div(phi)
+            fvm::laplacian(rAUf, pd) == fvc::div(phi)
         );
 
         pdEqn.setReference(pdRefCell, pdRefValue);
@@ -52,6 +52,6 @@
 
     pd.relax();
 
-    U += rUA*fvc::reconstruct((phi - phiU)/rUAf);
+    U += rAU*fvc::reconstruct((phi - phiU)/rAUf);
     U.correctBoundaryConditions();
 }

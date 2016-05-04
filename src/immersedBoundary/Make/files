@@ -9,6 +9,4 @@ immersedBoundaryFvsPatchField/immersedBoundaryFvsPatchFields.C
 
 immersedBoundaryAdjustPhi/immersedBoundaryAdjustPhi.C
 
-refineImmersedBoundaryMesh/refineImmersedBoundaryMesh.C
-
-LIB = $(FOAM_USER_LIBBIN)/libimmersedBoundary
+LIB = $(FOAM_LIBBIN)/libimmersedBoundary

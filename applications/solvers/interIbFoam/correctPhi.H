@@ -1,5 +1,5 @@
 {
-#   include "continuityErrs.H"
+    #include "continuityErrs.H"
 
     wordList pcorrTypes
     (
@@ -30,7 +30,7 @@
         pcorrTypes
     );
 
-    dimensionedScalar rUAf("(1|A(U))", dimTime/rho.dimensions(), 1.0);
+    dimensionedScalar rAUf("rAUf", dimTime/rho.dimensions(), 1.0);
 
     // Adjust immersed boundary fluxes
     immersedBoundaryAdjustPhi(phi, U);
@@ -40,7 +40,7 @@
     {
         fvScalarMatrix pcorrEqn
         (
-            fvm::laplacian(rUAf, pcorr) == fvc::div(phi)
+            fvm::laplacian(rAUf, pcorr) == fvc::div(phi)
         );
 
         pcorrEqn.setReference(pdRefCell, pdRefValue);
@@ -52,5 +52,5 @@
         }
     }
 
-#   include "immersedBoundaryContinuityErrs.H"
+    #include "immersedBoundaryContinuityErrs.H"
 }

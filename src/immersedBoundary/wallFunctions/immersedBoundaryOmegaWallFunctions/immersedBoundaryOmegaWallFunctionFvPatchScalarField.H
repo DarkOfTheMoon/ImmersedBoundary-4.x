@@ -23,7 +23,8 @@ License
     Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 Class
-    Foam::incompressible::RASModels::immersedBoundaryOmegaWallFunctionFvPatchScalarField
+    Foam::incompressible::RASModels
+        ::immersedBoundaryOmegaWallFunctionFvPatchScalarField
 
 Description
     Provides a wall function boundary condition/constraint on omega
