@@ -72,6 +72,14 @@
     );
 
 
+    // Construct incompressible turbulence model
+    autoPtr<incompressible::turbulenceModel> turbulence
+    (
+        incompressible::turbulenceModel::New(U, phi, mixture)
+    );
+
+    #include "readGravitationalAcceleration.H"
+
     Info<< "Calculating field g.h\n" << endl;
     volScalarField gh("gh", g & mesh.C());
     surfaceScalarField ghf("ghf", g & mesh.Cf());
@@ -114,10 +122,5 @@
     // Construct interface from alpha1 distribution
     interfaceProperties interface(alpha1, U, mixture);
 
-     // Construct incompressible turbulence model
-    autoPtr<incompressible::turbulenceModel> turbulence
-    (
-        incompressible::turbulenceModel::New(U, phi, mixture)
-    );
 
 #   include "createIbMasks.H"
