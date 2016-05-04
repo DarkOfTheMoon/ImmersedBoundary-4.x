@@ -76,23 +76,28 @@ int main(int argc, char *argv[])
             // --- PISO loop
             for (int corr = 0; corr < nCorr; corr++)
             {
-                volScalarField rUA = 1.0/UEqn.A();
+                volScalarField rAU(1.0/UEqn.A());
 
-                U = rUA*UEqn.H();
-                // Immersed boundary update
-                U.correctBoundaryConditions();
+                volVectorField HbyA("HbyA", U);
+                HbyA = rAU*UEqn.H();
+                HbyA.correctBoundaryConditions();
 
-                phi = faceIbMask*(fvc::interpolate(U) & mesh.Sf());
+                surfaceScalarField phiHbyA
+                (
+                    "phiHbyA",
+                    faceIbMask*
+                    (fvc::interpolate(HbyA) & mesh.Sf())
+                );
 
                 // Adjust immersed boundary fluxes
-                immersedBoundaryAdjustPhi(phi, U);
-                adjustPhi(phi, U, p);
+                immersedBoundaryAdjustPhi(phiHbyA, U);
+                adjustPhi(phiHbyA, U, p);
 
-                for (int nonOrth = 0; nonOrth <= nNonOrthCorr; nonOrth++)
+                for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
                 {
                     fvScalarMatrix pEqn
                     (
-                        fvm::laplacian(rUA, p) == fvc::div(phi)
+                        fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
                     );
 
                     pEqn.setReference(pRefCell, pRefValue);
@@ -101,13 +106,13 @@ int main(int argc, char *argv[])
 
                     if (nonOrth == nNonOrthCorr)
                     {
-                        phi -= pEqn.flux();
+                        phi = phiHbyA - pEqn.flux();
                     }
                 }
 
                 #include "immersedBoundaryContinuityErrs.H"
 
-                U -= rUA*fvc::grad(p);
+                U = HbyA - rAU*fvc::grad(p);
                 U.correctBoundaryConditions();
             }
         } while (++oCorr < nOuterCorr);
