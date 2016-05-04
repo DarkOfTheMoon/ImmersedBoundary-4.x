@@ -27,7 +27,7 @@
     phi = phiHbyA
       + faceIbMask*
         (
-            fvc::interpolate(interface.sigmaK())*fvc::snGrad(alpha1)
+            mixture.surfaceTensionForce()
           - ghf*fvc::snGrad(rho)
         )*rAUf*mesh.magSf();
 
