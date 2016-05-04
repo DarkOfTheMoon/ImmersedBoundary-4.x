@@ -1,9 +1,9 @@
-    Info<< "Reading field pd\n" << endl;
-    volScalarField pd
+    Info<< "Reading field p_rgh\n" << endl;
+    volScalarField p_rgh
     (
         IOobject
         (
-            "pd",
+            "p_rgh",
             runTime.timeName(),
             mesh,
             IOobject::MUST_READ,
@@ -40,14 +40,14 @@
         mesh
     );
 
-#   include "createPhi.H"
+    #include "createPhi.H"
 
 
     Info<< "Reading transportProperties\n" << endl;
-    immiscibleIncompressibleTwoPhaseMixture twoPhaseProperties(U, phi);
+    immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
 
-    const dimensionedScalar& rho1 = twoPhaseProperties.rho1();
-    const dimensionedScalar& rho2 = twoPhaseProperties.rho2();
+    const dimensionedScalar& rho1 = mixture.rho1();
+    const dimensionedScalar& rho2 = mixture.rho2();
 
 
     // Need to store rho for ddt(rho, U)
@@ -97,7 +97,7 @@
             IOobject::NO_READ,
             IOobject::AUTO_WRITE
         ),
-        pd + rho*gh
+        p_rgh + rho*gh
     );
 
 
@@ -105,7 +105,7 @@
     scalar pdRefValue = 0.0;
     setRefCell
     (
-        pd,
+        p,
         mesh.solutionDict().subDict("PIMPLE"),
         pdRefCell,
         pdRefValue
@@ -113,7 +113,7 @@
 
     scalar pRefValue = 0.0;
 
-    if (pd.needReference())
+    if (p_rgh.needReference())
     {
         pRefValue = readScalar
         (
@@ -129,12 +129,12 @@
     }
 
     // Construct interface from alpha1 distribution
-    interfaceProperties interface(alpha1, U, twoPhaseProperties);
+    interfaceProperties interface(alpha1, U, mixture);
 
      // Construct incompressible turbulence model
     autoPtr<incompressible::turbulenceModel> turbulence
     (
-        incompressible::turbulenceModel::New(U, phi, twoPhaseProperties)
+        incompressible::turbulenceModel::New(U, phi, mixture)
     );
 
 #   include "createIbMasks.H"

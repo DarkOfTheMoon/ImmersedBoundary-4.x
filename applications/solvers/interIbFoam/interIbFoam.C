@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
         // --- Pressure-velocity PIMPLE corrector loop
         while (pimple.loop())
         {
-            twoPhaseProperties.correct();
+            mixture.correct();
 
             #include "alphaEqn.H"
 
@@ -103,9 +103,9 @@ int main(int argc, char *argv[])
             // Recalculate the mass fluxes
             rhoPhi = phi*fvc::interpolate(rho);
 
-            p = pd + cellIbMask*rho*gh;
+            p = p_rgh + cellIbMask*rho*gh;
 
-            if (pd.needReference())
+            if (p_rgh.needReference())
             {
                 p += dimensionedScalar
                 (

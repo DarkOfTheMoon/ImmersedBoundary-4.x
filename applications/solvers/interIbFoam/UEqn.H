@@ -1,7 +1,7 @@
     surfaceScalarField muEff
     (
         "muEff",
-        twoPhaseProperties.muf()
+        mixture.muf()
       + fvc::interpolate(rho*turbulence->nut())
     );
 
@@ -30,7 +30,7 @@
                 (
                     fvc::interpolate(interface.sigmaK())*fvc::snGrad(alpha1)
                   - ghf*fvc::snGrad(rho)
-                  - fvc::snGrad(pd)
+                  - fvc::snGrad(p_rgh)
                 ) * mesh.magSf()
             )
         );

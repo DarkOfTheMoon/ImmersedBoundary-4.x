@@ -21,7 +21,7 @@
 
     // Adjust immersed boundary fluxes
     immersedBoundaryAdjustPhi(phiU, U);
-    adjustPhi(phiU, U, pd);
+    adjustPhi(phiU, U, p_rgh);
 
     phi = phiU
       + faceIbMask*
@@ -33,24 +33,24 @@
 
     while (pimple.correctNonOrthogonal())
     {
-        fvScalarMatrix pdEqn
+        fvScalarMatrix p_rghEqn
         (
-            fvm::laplacian(rAUf, pd) == fvc::div(phi)
+            fvm::laplacian(rAUf, p_rgh) == fvc::div(phi)
         );
 
-        pdEqn.setReference(pdRefCell, pdRefValue);
+        p_rghEqn.setReference(pdRefCell, pdRefValue);
 
-        pdEqn.boundaryManipulate(pd.boundaryField());
+        p_rghEqn.boundaryManipulate(p_rgh.boundaryField());
 
-        pdEqn.solve(mesh.solver(pd.select(pimple.finalInnerIter())));
+        p_rghEqn.solve(mesh.solver(p_rgh.select(pimple.finalInnerIter())));
 
         if (pimple.finalNonOrthogonalIter())
         {
-            phi -= pdEqn.flux();
+            phi -= p_rghEqn.flux();
         }
     }
 
-    pd.relax();
+    p_rgh.relax();
 
     U += rAU*fvc::reconstruct((phi - phiU)/rAUf);
     U.correctBoundaryConditions();
