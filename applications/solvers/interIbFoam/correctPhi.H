@@ -43,7 +43,7 @@
             fvm::laplacian(rAUf, pcorr) == fvc::div(phi)
         );
 
-        pcorrEqn.setReference(pdRefCell, pdRefValue);
+        pcorrEqn.setReference(pRefCell, pRefValue);
         pcorrEqn.solve();
 
         if (pimple.finalNonOrthogonalIter())

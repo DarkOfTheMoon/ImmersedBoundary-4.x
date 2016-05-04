@@ -12,20 +12,6 @@
         mesh
     );
 
-    Info<< "Reading field alpha1\n" << endl;
-    volScalarField alpha1
-    (
-        IOobject
-        (
-            "alpha1",
-            runTime.timeName(),
-            mesh,
-            IOobject::MUST_READ,
-            IOobject::AUTO_WRITE
-        ),
-        mesh
-    );
-
     Info<< "Reading field U\n" << endl;
     volVectorField U
     (
@@ -46,6 +32,9 @@
     Info<< "Reading transportProperties\n" << endl;
     immiscibleIncompressibleTwoPhaseMixture mixture(U, phi);
 
+    volScalarField& alpha1(mixture.alpha1());
+    volScalarField& alpha2(mixture.alpha2());
+
     const dimensionedScalar& rho1 = mixture.rho1();
     const dimensionedScalar& rho2 = mixture.rho2();
 
@@ -60,7 +49,7 @@
             mesh,
             IOobject::READ_IF_PRESENT
         ),
-        alpha1*rho1 + (scalar(1) - alpha1)*rho2,
+        alpha1*rho1 + alpha2*rho2,
         alpha1.boundaryField().types()
     );
     rho.oldTime();
@@ -73,7 +62,7 @@
     (
         IOobject
         (
-            "rho*phi",
+            "rhoPhi",
             runTime.timeName(),
             mesh,
             IOobject::NO_READ,
@@ -85,7 +74,7 @@
 
     Info<< "Calculating field g.h\n" << endl;
     volScalarField gh("gh", g & mesh.C());
-    surfaceScalarField ghf("gh", g & mesh.Cf());
+    surfaceScalarField ghf("ghf", g & mesh.Cf());
 
     volScalarField p
     (
@@ -100,32 +89,26 @@
         p_rgh + rho*gh
     );
 
-
-    label pdRefCell = 0;
-    scalar pdRefValue = 0.0;
+    label pRefCell = 0;
+    scalar pRefValue = 0.0;
     setRefCell
     (
         p,
-        mesh.solutionDict().subDict("PIMPLE"),
-        pdRefCell,
-        pdRefValue
+        p_rgh,
+        pimple.dict(),
+        pRefCell,
+        pRefValue
     );
-
-    scalar pRefValue = 0.0;
 
     if (p_rgh.needReference())
     {
-        pRefValue = readScalar
-        (
-            mesh.solutionDict().subDict("PIMPLE").lookup("pRefValue")
-        );
-
         p += dimensionedScalar
         (
             "p",
             p.dimensions(),
-            pRefValue - getRefCellValue(p, pdRefCell)
+            pRefValue - getRefCellValue(p, pRefCell)
         );
+        p_rgh = p - rho*gh;
     }
 
     // Construct interface from alpha1 distribution

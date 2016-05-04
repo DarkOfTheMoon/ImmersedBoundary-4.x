@@ -111,7 +111,7 @@ int main(int argc, char *argv[])
                 (
                     "p",
                     p.dimensions(),
-                    pRefValue - getRefCellValue(p, pdRefCell)
+                    pRefValue - getRefCellValue(p, pRefCell)
                 );
             }
 

@@ -38,7 +38,7 @@
             fvm::laplacian(rAUf, p_rgh) == fvc::div(phi)
         );
 
-        p_rghEqn.setReference(pdRefCell, pdRefValue);
+        p_rghEqn.setReference(pRefCell, getRefCellValue(p_rgh, pRefCell));
 
         p_rghEqn.boundaryManipulate(p_rgh.boundaryField());
 
