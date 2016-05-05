@@ -2,6 +2,7 @@
 cd ${0%/*} || exit 1    # run from this directory
 
 export IBM_SRC=`pwd`/src
+export IBM_UTILITIES=`pwd`/applications/utilities
 
 src/Allwmake $*
 applications/Allwmake $*
