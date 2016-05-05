@@ -36,10 +36,14 @@ Description
 
 int main(int argc, char *argv[])
 {
-#   include "setRootCase.H"
+    #include "addOverwriteOption.H"
 
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+
+    #include "createTime.H"
+    #include "createMesh.H"
+
+    const bool overwrite = args.optionFound("overwrite");
 
     // 1
     {
@@ -137,7 +141,10 @@ int main(int argc, char *argv[])
         rib.refineMesh(refCells);
     }
 
-//     runTime++;
+    if (overwrite)
+    {
+        mesh.setInstance("constant");
+    }
 
     mesh.write();
 
