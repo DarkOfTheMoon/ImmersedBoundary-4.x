@@ -36,16 +36,15 @@ Author
 #include "fvCFD.H"
 #include "triSurface.H"
 #include "triSurfaceTools.H"
-// #include "labelHashSet.H"
 #include "wallPolyPatch.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
 {
-#   include "setRootCase.H"
-#   include "createTime.H"
-#   include "createMesh.H"
+    #include "setRootCase.H"
+    #include "createTime.H"
+    #include "createMesh.H"
 
     labelHashSet includedPatches;
 
@@ -55,19 +54,20 @@ int main(int argc, char *argv[])
             includedPatches.insert(patchI);
     }
 
-    triSurface triSurf =
+    triSurface triSurf
+    (
         triSurfaceTools::triangulate
         (
             mesh.boundaryMesh(),
             includedPatches
-        );
+        )
+    );
 
 
     // Writing triSurface mesh
     Info << "Write triSurface mesh ... ";
 
     triSurf.write(runTime.caseName() + ".stl");
-    triSurf.write(runTime.caseName() + ".ftr");
 
     Info << "done" << endl;
 
