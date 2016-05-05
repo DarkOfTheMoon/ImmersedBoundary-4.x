@@ -29,7 +29,7 @@ writeFormat     raw;
 
 sampleSets
 (
-    uniform 
+    uniform
     {
         name            cutLine;
         axis            distance;

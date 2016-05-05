@@ -25,7 +25,7 @@ FoamFile
 
 convertToMeters 0.5;
 
-vertices        
+vertices
 (
     ( 0.4 -0.4 0) //0
     ( 0.4  0.4 0) //1
@@ -57,7 +57,7 @@ blocks
     hex (4 0 3 7 12 8 11 15) (30 30 1) simpleGrading (1 1 1)
 );
 
-edges           
+edges
 (
     arc 4 5 (1 0 0)
     arc 13 12 (1 0 0.6)
@@ -102,7 +102,7 @@ boundary
     }
 );
 
-mergePatchPairs 
+mergePatchPairs
 (
 );
 
