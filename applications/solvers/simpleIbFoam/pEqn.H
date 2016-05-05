@@ -2,24 +2,29 @@
     p.boundaryField().updateCoeffs();
 
     volScalarField rAU(1.0/UEqn().A());
-
-    U = UEqn().H()*rAU;
-    // Immersed boundary update
-    U.correctBoundaryConditions();
-
+    volVectorField HbyA("HbyA", U);
+    HbyA = rAU*UEqn().H();
     UEqn.clear();
-    phi = faceIbMask*(fvc::interpolate(U) & mesh.Sf());
+
+    HbyA.correctBoundaryConditions();
+
+    surfaceScalarField phiHbyA
+    (
+        "phiHbyA",
+        faceIbMask*
+        (fvc::interpolate(HbyA) & mesh.Sf())
+    );
 
     // Adjust immersed boundary fluxes
-    immersedBoundaryAdjustPhi(phi, U);
-    adjustPhi(phi, U, p);
+    immersedBoundaryAdjustPhi(phiHbyA, U);
+    adjustPhi(phiHbyA, U, p);
 
     // Non-orthogonal pressure corrector loop
     while (simple.correctNonOrthogonal())
     {
         fvScalarMatrix pEqn
         (
-            fvm::laplacian(rAU, p) == fvc::div(phi)
+            fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
         );
 
         pEqn.setReference(pRefCell, pRefValue);
@@ -30,7 +35,7 @@
 
         if (simple.finalNonOrthogonalIter())
         {
-            phi -= pEqn.flux();
+            phi = phiHbyA - pEqn.flux();
         }
     }
 
@@ -40,7 +45,7 @@
     p.relax();
 
     // Momentum corrector
-    U -= rAU*fvc::grad(p);
+    U = HbyA - rAU*fvc::grad(p);
     U.correctBoundaryConditions();
     fvOptions.correct(U);
 }
