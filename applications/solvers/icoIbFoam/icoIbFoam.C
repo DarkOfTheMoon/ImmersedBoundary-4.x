@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright held by original author
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -59,63 +59,59 @@ int main(int argc, char *argv[])
         #include "readPISOControls.H"
         #include "CourantNo.H"
 
-        // Pressure-velocity corrector
-        int oCorr = 0;
-        do
+        fvVectorMatrix UEqn
+        (
+            fvm::ddt(U)
+          + fvm::div(phi, U)
+          - fvm::laplacian(nu, U)
+        );
+
+        UEqn.boundaryManipulate(U.boundaryField());
+        solve(UEqn == -cellIbMask*fvc::grad(p));
+
+        // --- PISO loop
+
+        for (int corr=0; corr<nCorr; corr++)
         {
-            fvVectorMatrix UEqn
+            volScalarField rAU(1.0/UEqn.A());
+
+            volVectorField HbyA("HbyA", U);
+            HbyA = rAU*UEqn.H();
+            HbyA.correctBoundaryConditions();
+
+            surfaceScalarField phiHbyA
             (
-                fvm::ddt(U)
-              + fvm::div(phi, U)
-              - fvm::laplacian(nu, U)
+                "phiHbyA",
+                faceIbMask*
+                (fvc::interpolate(HbyA) & mesh.Sf())
             );
 
-            UEqn.boundaryManipulate(U.boundaryField());
-            solve(UEqn == -cellIbMask*fvc::grad(p));
+            // Adjust immersed boundary fluxes
+            immersedBoundaryAdjustPhi(phiHbyA, U);
+            adjustPhi(phiHbyA, U, p);
 
-            // --- PISO loop
-            for (int corr = 0; corr < nCorr; corr++)
+            for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
             {
-                volScalarField rAU(1.0/UEqn.A());
-
-                volVectorField HbyA("HbyA", U);
-                HbyA = rAU*UEqn.H();
-                HbyA.correctBoundaryConditions();
-
-                surfaceScalarField phiHbyA
+                fvScalarMatrix pEqn
                 (
-                    "phiHbyA",
-                    faceIbMask*
-                    (fvc::interpolate(HbyA) & mesh.Sf())
+                    fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
                 );
 
-                // Adjust immersed boundary fluxes
-                immersedBoundaryAdjustPhi(phiHbyA, U);
-                adjustPhi(phiHbyA, U, p);
+                pEqn.setReference(pRefCell, pRefValue);
+                pEqn.boundaryManipulate(p.boundaryField());
+                pEqn.solve();
 
-                for (int nonOrth=0; nonOrth<=nNonOrthCorr; nonOrth++)
+                if (nonOrth == nNonOrthCorr)
                 {
-                    fvScalarMatrix pEqn
-                    (
-                        fvm::laplacian(rAU, p) == fvc::div(phiHbyA)
-                    );
-
-                    pEqn.setReference(pRefCell, pRefValue);
-                    pEqn.boundaryManipulate(p.boundaryField());
-                    pEqn.solve();
-
-                    if (nonOrth == nNonOrthCorr)
-                    {
-                        phi = phiHbyA - pEqn.flux();
-                    }
+                    phi = phiHbyA - pEqn.flux();
                 }
-
-                #include "immersedBoundaryContinuityErrs.H"
-
-                U = HbyA - rAU*fvc::grad(p);
-                U.correctBoundaryConditions();
             }
-        } while (++oCorr < nOuterCorr);
+
+            #include "immersedBoundaryContinuityErrs.H"
+
+            U = HbyA - rAU*fvc::grad(p);
+            U.correctBoundaryConditions();
+        }
 
         runTime.write();
 
