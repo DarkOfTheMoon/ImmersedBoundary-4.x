@@ -134,28 +134,14 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
                 ];
         }
 
-        // Weights
-        scalarField W(allPoints.size(), 1.0);
+        // Weights calculation
+
         vector origin = C[ibc[cellI]];
 
-        // Calculate max radius for the interpolation stencil
-        scalar maxR = 0;
-        for (label i = 0; i < allPoints.size(); i++)
-        {
-            if (mag(allPoints[i] - origin) > maxR)
-            {
-                maxR = mag(allPoints[i] - origin);
-            }
-        }
-        maxR *= 1.1;
+        scalarField curDist = mag(allPoints - origin);
 
         // Calculate weights
-        for (label i = 0; i < allPoints.size(); i++)
-        {
-            scalar curR =  mag(allPoints[i] - origin);
-
-            W[i] = 0.5*(1 + Foam::cos(M_PI*curR/maxR));
-        }
+        scalarField W = 0.5*(1 + cos(M_PI*curDist/(1.1*max(curDist))));
 
         idm.set
         (
@@ -221,22 +207,28 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             }
         }
 
-        // Calculate matrix norm
-        scalar maxRowSum = 0.0;
-        for (label i = 0; i < lsM.n(); i++)
+        if (debug)
         {
-            scalar curRowSum = 0.0;
+            // Calculate matrix norm
+            scalar maxRowSum = 0.0;
 
-            for (label j = 0; j < lsM.m(); j++)
+            for (label i = 0; i < lsM.n(); i++)
             {
-                curRowSum += lsM[i][j];
+                scalar curRowSum = 0.0;
+
+                for (label j = 0; j < lsM.m(); j++)
+                {
+                    curRowSum += lsM[i][j];
+                }
+
+                if (curRowSum > maxRowSum)
+                {
+                    maxRowSum = curRowSum;
+                }
             }
-            if (curRowSum > maxRowSum)
-            {
-                maxRowSum = curRowSum;
-            }
+
+            conditionNumber[cellI] = maxRowSum;
         }
-        conditionNumber[cellI] = maxRowSum;
 
         // Calculate inverse
         scalarSquareMatrix invLsM = LUinvert(lsM);
@@ -252,29 +244,32 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             }
         }
 
-        // Calculate condition number
-        maxRowSum = 0.0;
-        for (label i = 0; i < lsM.n(); i++)
+        if (debug)
         {
-            scalar curRowSum = 0.0;
+            // Calculate condition number
+            scalar maxRowSum = 0.0;
 
-            for (label j = 0; j < lsM.m(); j++)
+            for (label i = 0; i < lsM.n(); i++)
             {
-                curRowSum += invLsM[i][j];
+                scalar curRowSum = 0.0;
+
+                for (label j = 0; j < lsM.m(); j++)
+                {
+                    curRowSum += invLsM[i][j];
+                }
+
+                if (curRowSum > maxRowSum)
+                {
+                    maxRowSum = curRowSum;
+                }
             }
-            if (curRowSum > maxRowSum)
-            {
-                maxRowSum = curRowSum;
-            }
+
+            conditionNumber[cellI] *= maxRowSum;
+
+            InfoIn(__PRETTY_FUNCTION__)
+                << "Max Dirichlet matrix condition number: "
+                << gMax(conditionNumber) << endl;
         }
-        conditionNumber[cellI] *= maxRowSum;
-    }
-
-    if (debug)
-    {
-        InfoIn(__PRETTY_FUNCTION__)
-            << "Max Dirichlet matrix condition number: "
-            << gMax(conditionNumber) << endl;
     }
 }
 
@@ -313,6 +308,9 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
     const vectorField& C = mesh_.cellCentres();
 
     scalarField conditionNumber(ibc.size(), 0);
+
+    // Initialize maxRowSum for debug
+    scalar maxRowSum = 0.0;
 
     const FieldField<Field, vector>& procC = ibProcCentres();
 
@@ -354,31 +352,15 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
                 ];
         }
 
-        // Weights
-        scalarField W(allPoints.size(), 1.0);
+        // Weights calculation
 
         vector origin = C[ibc[cellI]];
 
-        // Calculate max radius for the interpolation stencil
-        scalar maxR = 0;
-        for (label i = 0; i < allPoints.size(); i++)
-        {
-            if (mag(allPoints[i] - origin) > maxR)
-            {
-                maxR = mag(allPoints[i] - origin);
-            }
-        }
+        scalarField curR = mag(allPoints - origin);
 
         // Calculate weights
-        for (label i = 0; i < allPoints.size(); i++)
-        {
-            scalar curR =  mag(allPoints[i] - origin);
+        scalarField W = 1 - curR/(1.1*max(curR));
 
-            // Alternative weights formulation.  HJ, 21/May/2012
-//             W[i] = 0.5*(1 + Foam::cos(M_PI*curR/maxR));
-//             W[i] = max((1 - curR/maxR), 0.01);
-            W[i] = 1 - curR/maxR;
-        }
 
         inm.set
         (
@@ -493,7 +475,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs, nCoeffs, 0.);
+        scalarSquareMatrix lsM(nCoeffs, nCoeffs, 0.0);
 
         for (label i = 0; i < lsM.n(); i++)
         {
@@ -507,21 +489,27 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
         }
 
         // Calculate matrix norm
-        scalar maxRowSum = 0.0;
-        for (label i = 0; i < lsM.n(); i++)
+        if (debug)
         {
-            scalar curRowSum = 0.0;
+            maxRowSum = 0.0;
 
-            for (label j = 0; j < lsM.m(); j++)
+            for (label i = 0; i < lsM.n(); i++)
             {
-                curRowSum += lsM[i][j];
+                scalar curRowSum = 0.0;
+
+                for (label j = 0; j < lsM.m(); j++)
+                {
+                    curRowSum += lsM[i][j];
+                }
+
+                if (curRowSum > maxRowSum)
+                {
+                    maxRowSum = curRowSum;
+                }
             }
-            if (curRowSum > maxRowSum)
-            {
-                maxRowSum = curRowSum;
-            }
+
+            conditionNumber[cellI] = maxRowSum;
         }
-        conditionNumber[cellI] = maxRowSum;
 
         // Calculate inverse
         scalarSquareMatrix invLsM = LUinvert(lsM);
@@ -538,40 +526,42 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
         }
 
         // Calculate condition number
-        maxRowSum = 0.0;
-        for (label i = 0; i < lsM.n(); i++)
+        if (debug)
         {
-            scalar curRowSum = 0.0;
+            maxRowSum = 0.0;
 
-            for (label j = 0; j < lsM.m(); j++)
+            for (label i = 0; i < lsM.n(); i++)
             {
-                curRowSum += invLsM[i][j];
+                scalar curRowSum = 0.0;
+
+                for (label j = 0; j < lsM.m(); j++)
+                {
+                    curRowSum += invLsM[i][j];
+                }
+
+                if (curRowSum > maxRowSum)
+                {
+                    maxRowSum = curRowSum;
+                }
             }
-            if (curRowSum > maxRowSum)
+
+            conditionNumber[cellI] *= maxRowSum;
+
+            if (conditionNumber[cellI] > 1e6)
             {
-                maxRowSum = curRowSum;
+                labelList CC = interpCells;
+                sort(CC);
+
+                Info<< "Condition = " << conditionNumber[cellI] << nl
+                    << "cell cells: " << CC
+                    << "M = " << lsM
+                    << endl;
             }
+
+            InfoIn(__PRETTY_FUNCTION__)
+                << "Max Neumann matrix condition number: "
+                << gMax(conditionNumber) << endl;
         }
-        conditionNumber[cellI] *= maxRowSum;
-
-        //HJ
-//         if (conditionNumber[cellI] > 1e6)
-//         {
-//             labelList CC = interpCells;
-//             sort(CC);
-
-//             Info<< "Condition = " << conditionNumber[cellI] << nl
-//                 << "cell cells: " << CC
-//                 << "M = " << lsM
-//                 << endl;
-//         }
-    }
-
-    if (debug)
-    {
-        InfoIn(__PRETTY_FUNCTION__)
-            << "Max Neumann matrix condition number: "
-            << gMax(conditionNumber) << endl;
     }
 }
 
