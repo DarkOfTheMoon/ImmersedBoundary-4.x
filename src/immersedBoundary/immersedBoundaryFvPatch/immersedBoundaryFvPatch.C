@@ -89,13 +89,93 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
     }
 
     // Not allowed to call correctBoundaryConditions.  HJ, 16/Apr/2012
-    forAll (gammaPtr_->boundaryField(), patchI)
+    // Evaluate coupled boundaries and copy out the uncoupled ones
     {
-        gammaPtr_->boundaryField()[patchI] =
-            gammaPtr_->boundaryField()[patchI].patchInternalField();
+        volScalarField::GeometricBoundaryField& gb = gammaPtr_->boundaryField();
+        if (debug)
+        {
+            Info<< "GeometricField<Type, PatchField, GeoMesh>::"
+                "GeometricBoundaryField::"
+                "evaluateCoupled()" << endl;
+        }
+
+        if
+        (
+            Pstream::defaultCommsType == Pstream::blocking
+         || Pstream::defaultCommsType == Pstream::nonBlocking
+        )
+        {
+            forAll(*this, patchi)
+            {
+                if (gb[patchi].coupled())
+                {
+                    gb[patchi].initEvaluate(Pstream::defaultCommsType);
+                }
+            }
+
+            // Block for any outstanding requests
+            if (Pstream::defaultCommsType == Pstream::nonBlocking)
+            {
+                IPstream::waitRequests();
+                OPstream::waitRequests();
+            }
+
+            forAll(*this, patchi)
+            {
+                if (gb[patchi].coupled())
+                {
+                    gb[patchi].evaluate(Pstream::defaultCommsType);
+                }
+            }
+        }
+        else if (Pstream::defaultCommsType == Pstream::scheduled)
+        {
+            const lduSchedule& patchSchedule
+                = mesh_.globalData().patchSchedule();
+
+            forAll(patchSchedule, patchEvali)
+            {
+                if (patchSchedule[patchEvali].init)
+                {
+                    if
+                    (
+                        gb[patchSchedule[patchEvali].patch].coupled()
+                    )
+                    {
+                        gb[patchSchedule[patchEvali].patch]
+                            .initEvaluate(Pstream::scheduled);
+                    }
+                }
+                else
+                {
+                    if
+                    (
+                        gb[patchSchedule[patchEvali].patch].coupled()
+                    )
+                    {
+                        gb[patchSchedule[patchEvali].patch]
+                            .evaluate(Pstream::scheduled);
+                    }
+                }
+            }
+        }
+        else
+        {
+            FatalErrorIn("GeometricBoundaryField::evaluateCoupled()")
+                << "Unsuported communications type "
+                << Pstream::commsTypeNames[Pstream::defaultCommsType]
+                << exit(FatalError);
+        }
     }
 
-//     gammaPtr_->write();
+    forAll (gammaPtr_->boundaryField(), patchI)
+    {
+        if (!gammaPtr_->boundaryField()[patchI].coupled())
+        {
+            gammaPtr_->boundaryField()[patchI] =
+                gammaPtr_->boundaryField()[patchI].patchInternalField();
+        }
+    }
 }
 
 
@@ -164,10 +244,85 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
     }
 
     // Not allowed to call correctBoundaryConditions.  HJ, 16/Apr/2012
-    forAll (gammaExtPtr_->boundaryField(), patchI)
+    // Evaluate coupled boundaries and copy out the uncoupled ones
     {
-        gammaExtPtr_->boundaryField()[patchI] =
-            gammaExtPtr_->boundaryField()[patchI].patchInternalField();
+        volScalarField::GeometricBoundaryField& gb
+            = gammaExtPtr_->boundaryField();
+
+        if (debug)
+        {
+            Info<< "GeometricField<Type, PatchField, GeoMesh>::"
+                "GeometricBoundaryField::"
+                "evaluateCoupled()" << endl;
+        }
+
+        if
+        (
+            Pstream::defaultCommsType == Pstream::blocking
+         || Pstream::defaultCommsType == Pstream::nonBlocking
+        )
+        {
+            forAll(*this, patchi)
+            {
+                if (gb[patchi].coupled())
+                {
+                    gb[patchi].initEvaluate(Pstream::defaultCommsType);
+                }
+            }
+
+            // Block for any outstanding requests
+            if (Pstream::defaultCommsType == Pstream::nonBlocking)
+            {
+                IPstream::waitRequests();
+                OPstream::waitRequests();
+            }
+
+            forAll(*this, patchi)
+            {
+                if (gb[patchi].coupled())
+                {
+                    gb[patchi].evaluate(Pstream::defaultCommsType);
+                }
+            }
+        }
+        else if (Pstream::defaultCommsType == Pstream::scheduled)
+        {
+            const lduSchedule& patchSchedule
+                = mesh_.globalData().patchSchedule();
+
+            forAll(patchSchedule, patchEvali)
+            {
+                if (patchSchedule[patchEvali].init)
+                {
+                    if
+                    (
+                        gb[patchSchedule[patchEvali].patch].coupled()
+                    )
+                    {
+                        gb[patchSchedule[patchEvali].patch]
+                            .initEvaluate(Pstream::scheduled);
+                    }
+                }
+                else
+                {
+                    if
+                    (
+                        gb[patchSchedule[patchEvali].patch].coupled()
+                    )
+                    {
+                        gb[patchSchedule[patchEvali].patch]
+                            .evaluate(Pstream::scheduled);
+                    }
+                }
+            }
+        }
+        else
+        {
+            FatalErrorIn("GeometricBoundaryField::evaluateCoupled()")
+                << "Unsuported communications type "
+                << Pstream::commsTypeNames[Pstream::defaultCommsType]
+                << exit(FatalError);
+        }
     }
 }
 
