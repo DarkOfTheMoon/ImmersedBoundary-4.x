@@ -1136,7 +1136,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
          && mag(ibCellCentres[cellI].z() - ibPoints[cellI].z()) > SMALL
         )
         {
-            WarningIn(__PRETTY_FUNCTION__)
+            FatalErrorIn(__PRETTY_FUNCTION__)
                 << "Intersection point is not on symmetry plane " << nl
                 << "C = " << ibCellCentres[cellI]
                 << " D = " << ibPoints[cellI] << nl

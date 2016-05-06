@@ -268,7 +268,13 @@ Foam::label Foam::refineImmersedBoundaryMesh::twoDNess() const
     {
         const polyPatch& patch = patches[patchI];
 
-        if (!isA<wedgePolyPatch>(patch))
+        if
+        (
+           !(
+                isA<wedgePolyPatch>(patch)
+              ||isA<immersedBoundaryPolyPatch>(patch)
+            )
+        )
         {
             const vectorField& n = patch.faceAreas();
 
