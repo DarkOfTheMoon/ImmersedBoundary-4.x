@@ -491,15 +491,12 @@ void Foam::immersedBoundaryFvPatch::addIbCornerCells() const
             }
 
             scalar delta = cellSize(liveCell);
-//             delta *= 2;
-            vector span(delta, delta, delta);
+            vector span(2*delta, 2*delta, 2*delta);
 
             pointIndexHit pih = tss.nearest(C[liveCell], span);
 
             if (pih.hit())
             {
-//                 vector p = pih.hitPoint();
-
                 vector n =
                     triSurfaceTools::surfaceNormal
                     (
@@ -933,18 +930,21 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
 
     const vectorField& C = mesh_.cellCentres();
 
+    // Get IB cell centres
+    vectorField ibCellCentres(C, ibc);
+
     const triSurfaceSearch& tss = ibPolyPatch_.triSurfSearch();
 
     forAll (ibc, cellI)
     {
         vector span
         (
-            2*delta[cellI],
-            2*delta[cellI],
-            2*delta[cellI]
+            7*delta[cellI],
+            7*delta[cellI],
+            7*delta[cellI]
         );
 
-        pointIndexHit pih = tss.nearest(C[ibc[cellI]], span);
+        pointIndexHit pih = tss.nearest(ibCellCentres[cellI], span);
 
         if (pih.hit())
         {
@@ -971,18 +971,23 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
                 << "Can't find nearest triSurface point for cell "
                 << ibc[cellI] << ", "
                 << mesh_.cellCentres()[ibc[cellI]]
+                << "Hit data = " << pih << nl
                 << abort(FatalError);
         }
 
         if
         (
             mesh_.nGeometricD() < 3
-         && mag(C[ibc[cellI]].z() - ibPoints[cellI].z()) > SMALL
+         && mag(ibCellCentres[cellI].z() - ibPoints[cellI].z()) > SMALL
         )
         {
-            FatalErrorIn(__PRETTY_FUNCTION__)
-                << "Intersection point is not on symmetry plane "
-                << "for 2-D geometry" << abort(FatalError);
+            WarningIn(__PRETTY_FUNCTION__)
+                << "Intersection point is not on symmetry plane " << nl
+                << "C = " << ibCellCentres[cellI]
+                << " D = " << ibPoints[cellI] << nl
+                << "for 2-D geometry.  Adjusting" << endl;
+
+            ibPoints[cellI].z() = ibCellCentres[cellI].z();
         }
     }
 }
@@ -1032,27 +1037,6 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
     scalarField rM(ibCellSizes());
     rM *= 3.5;
 
-//     forAll (cellCellsExt, cellI)
-//     {
-//         findCellCells
-//         (
-//             C[ibc[cellI]],
-//             ibc[cellI],
-//             cellCellsExt[cellI]
-//         );
-
-//         for (label i = 0; i < cellCellsExt[cellI].size(); i++)
-//         {
-//             label curCell = cellCellsExt[cellI][i];
-//             scalar r = mag(C[curCell] - C[ibc[cellI]]);
-//             if (r > rM[cellI])
-//             {
-//                 cellCellsExt[cellI].setSize(i);
-//                 break;
-//             }
-//         }
-//     }
-
     const vectorField& ibp = ibPoints();
 
     // Note: the algorithm is originally written with inward-facing normals
@@ -1072,7 +1056,9 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
         );
 
         cellCells[cellI] = labelList(curCells.size(), -1);
+
         label cI = 0;
+
         for (label i = 0; i < curCells.size(); i++)
         {
             label curCell = curCells[i];
@@ -1090,6 +1076,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
                 }
             }
         }
+
         cellCells[cellI].setSize(cI);
     }
 
@@ -1172,7 +1159,7 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
         labelList procIbCells = procIbCellsSet.toc();
         sort(procIbCells);
 
-        // Send and receive num of immersed boundary cells
+        // Send and receive number of immersed boundary cells
         // next to processor boundaries
         for (label procI = 0; procI < Pstream::nProcs(); procI++)
         {
@@ -1316,12 +1303,14 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
                         }
 
                         labelList tmpCellList;
+
                         findCellCells
                         (
                             ctrs[procI][cellI],
                             nearestCellID,
                             tmpCellList
                         );
+
                         forAll (tmpCellList, cI)
                         {
                             scalar r =
@@ -1784,6 +1773,7 @@ Foam::label Foam::immersedBoundaryFvPatch::findNearestCell
 ) const
 {
     const vectorField& C = mesh_.cellCentres();
+
     const scalarField& gammaExtI = gammaExt().internalField();
 
     label nearestCellI = -1;
@@ -1824,6 +1814,7 @@ void Foam::immersedBoundaryFvPatch::findCellCells
 
     // First row
     const labelList& curCellPoints = cellPoints[cellID];
+
     forAll (curCellPoints, pointI)
     {
         label curPoint = curCellPoints[pointI];
@@ -1921,8 +1912,10 @@ void Foam::immersedBoundaryFvPatch::findCellCells
 
     // Sorting cells
     const vectorField& C = mesh_.cellCentres();
+
     curCells = cellSet.toc();
     scalarField distances(curCells.size(), 0);
+
     forAll (distances, cI)
     {
         distances[cI] =
@@ -2136,8 +2129,6 @@ const Foam::labelList& Foam::immersedBoundaryFvPatch::ibCells() const
     if (!ibCellsPtr_)
     {
         makeIbCells();
-
-//         addIbCornerCells();//HJ does not work!
     }
 
     return *ibCellsPtr_;
@@ -2381,5 +2372,6 @@ const Foam::vectorField& Foam::immersedBoundaryFvPatch::triCf() const
 {
     return surface().faceCentres();
 }
+
 
 // ************************************************************************* //

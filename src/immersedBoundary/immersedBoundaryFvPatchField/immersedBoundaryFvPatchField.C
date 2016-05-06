@@ -231,8 +231,11 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
 {
     // Get addressing
     const labelList& ibc = ibPatch_.ibCells();
+
     const labelListList& ibCellCells = ibPatch_.ibCellCells();
+
     const List<List<labelPair> >& ibCellProcCells = ibPatch_.ibCellProcCells();
+
     const PtrList<scalarRectangularMatrix>& invMat =
         ibPatch_.invNeumannMatrices();
 
