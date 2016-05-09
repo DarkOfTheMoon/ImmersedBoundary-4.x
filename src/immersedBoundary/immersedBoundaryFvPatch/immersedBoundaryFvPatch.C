@@ -262,7 +262,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
          || Pstream::defaultCommsType == Pstream::nonBlocking
         )
         {
-            forAll(*this, patchi)
+            forAll(gb, patchi)
             {
                 if (gb[patchi].coupled())
                 {
@@ -277,7 +277,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
                 OPstream::waitRequests();
             }
 
-            forAll(*this, patchi)
+            forAll(gb, patchi)
             {
                 if (gb[patchi].coupled())
                 {
