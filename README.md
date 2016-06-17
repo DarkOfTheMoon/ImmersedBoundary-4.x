@@ -1,21 +1,25 @@
 ImmersedBoundary
 ================
 
-This original source code for this toolkit has been retrieved from here: http://sourceforge.net/projects/openfoam-extend/files/OpenFOAM_Workshops/OFW7_2012_Darmstadt/Training/ZeljkoTukovic/ZeljkoTukovic-ImmersedBoundaryMaterial.tgz
+This original source code for this toolkit has been retrieved from here:
+http://sourceforge.net/projects/openfoam-extend/files/OpenFOAM_Workshops/OFW7_2012_Darmstadt/Training/ZeljkoTukovic/ZeljkoTukovic-ImmersedBoundaryMaterial.tgz
 
-This repository merely aims to make it easier to download and create forks of this source code. In addition, this [git repository](https://github.com/wyldckat/scripts4OpenFOAM3rdParty/) was brought to you by Bruno Santos (wyldckat@github working at [blueCAPE Lda](http://www.bluecape.com.pt)).
+The original repository [ImmersedBoundary](http://github.com:wyldckat/ImmersedBoundary.git)
+by Bruno Santos (wyldckat@github) aims to make it easier to download and create
+forks of this toolkit. This fork [ImmersedBoundary-OF-2.3.x](http://github.com/DarkOfTheMoon/ImmersedBoundary-OF-2.3.x.git)
+by Zhang HuiJie (DarkOfTheMoon@github) has been ported to OpenFOAM-2.3.x.
 
-Installation instructions available at openfoamwiki.net: http://openfoamwiki.net/index.php/Extend-bazaar/Toolkits/ImmersedBoundary
+Installation instructions for foam-extend available at openfoamwiki.net:
+http://openfoamwiki.net/index.php/Extend-bazaar/Toolkits/ImmersedBoundary.
 
-Target OpenFOAM versions/variants:
- * `master` branch targets the variant OpenFOAM 1.6-ext
- * `fe31` branch targets the variant foam-extend 3.1
+This version targets OpenFOAM-2.3.x.
 
 
 Original authors
 ================
 
-Zeljko Tukovic and Hrvoje Jasak, according to the presentation available here: http://sourceforge.net/projects/openfoam-extend/files/OpenFOAM_Workshops/OFW7_2012_Darmstadt/Training/ZeljkoTukovic/ZeljkoTukovic-ImmersedBoundarySlides.tgz
+Zeljko Tukovic and Hrvoje Jasak, according to the presentation available here:
+http://sourceforge.net/projects/openfoam-extend/files/OpenFOAM_Workshops/OFW7_2012_Darmstadt/Training/ZeljkoTukovic/ZeljkoTukovic-ImmersedBoundarySlides.tgz
 
 
 License
