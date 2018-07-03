@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -36,6 +36,8 @@ void Foam::immersedBoundaryFvPatch::makeTriAddressing() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (cellsToTriAddrPtr_ || cellsToTriWeightsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)

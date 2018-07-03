@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2017 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -53,6 +53,8 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (gammaPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -76,7 +78,7 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
             dimensionedScalar("1", dimless, 1)
         );
 
-    scalarField& gammaI = gammaPtr_->internalField();
+    scalarField& gammaI = gammaPtr_->ref();
 
     // Start from gammaExt and mark IB cells and inactive
     gammaI = gammaExt().internalField();
@@ -91,11 +93,11 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
     // Not allowed to call correctBoundaryConditions.  HJ, 16/Apr/2012
     // Evaluate coupled boundaries and copy out the uncoupled ones
     {
-        volScalarField::GeometricBoundaryField& gb = gammaPtr_->boundaryField();
+        volScalarField::Boundary& gb = gammaPtr_->boundaryFieldRef();
         if (debug)
         {
             Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-                "GeometricBoundaryField::"
+                "Boundary::"
                 "evaluateCoupled()" << endl;
         }
 
@@ -161,7 +163,7 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
         }
         else
         {
-            FatalErrorIn("GeometricBoundaryField::evaluateCoupled()")
+            FatalErrorIn("Boundary::evaluateCoupled()")
                 << "Unsuported communications type "
                 << Pstream::commsTypeNames[Pstream::defaultCommsType]
                 << exit(FatalError);
@@ -172,7 +174,7 @@ void Foam::immersedBoundaryFvPatch::makeGamma() const
     {
         if (!gammaPtr_->boundaryField()[patchI].coupled())
         {
-            gammaPtr_->boundaryField()[patchI] =
+            gammaPtr_->boundaryFieldRef()[patchI] =
                 gammaPtr_->boundaryField()[patchI].patchInternalField();
         }
     }
@@ -189,6 +191,8 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (gammaExtPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -212,7 +216,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
             dimensionedScalar("1", dimless, 1)
         );
 
-    scalarField& gammaExtI = gammaExtPtr_->internalField();
+    scalarField& gammaExtI = gammaExtPtr_->ref();
 
     const vectorField& C = mesh_.cellCentres();
 
@@ -246,13 +250,12 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
     // Not allowed to call correctBoundaryConditions.  HJ, 16/Apr/2012
     // Evaluate coupled boundaries and copy out the uncoupled ones
     {
-        volScalarField::GeometricBoundaryField& gb
-            = gammaExtPtr_->boundaryField();
+        volScalarField::Boundary& gb = gammaExtPtr_->boundaryFieldRef();
 
         if (debug)
         {
             Info<< "GeometricField<Type, PatchField, GeoMesh>::"
-                "GeometricBoundaryField::"
+                "Boundary::"
                 "evaluateCoupled()" << endl;
         }
 
@@ -318,7 +321,7 @@ void Foam::immersedBoundaryFvPatch::makeGammaExt() const
         }
         else
         {
-            FatalErrorIn("GeometricBoundaryField::evaluateCoupled()")
+            FatalErrorIn("Boundary::evaluateCoupled()")
                 << "Unsuported communications type "
                 << Pstream::commsTypeNames[Pstream::defaultCommsType]
                 << exit(FatalError);
@@ -337,6 +340,8 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (sGammaPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -365,10 +370,9 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
         );
 
     // Get access to components of sGamma
-    scalarField& sGammaI = sGammaPtr_->internalField();
+    scalarField& sGammaI = sGammaPtr_->ref();
 
-    surfaceScalarField::GeometricBoundaryField& sGammaPatches =
-        sGammaPtr_->boundaryField();
+    surfaceScalarField::Boundary& sGammaPatches(sGammaPtr_->boundaryFieldRef());
 
     const unallocLabelList& owner = mesh_.owner();
     const unallocLabelList& neighbour = mesh_.neighbour();
@@ -380,13 +384,13 @@ void Foam::immersedBoundaryFvPatch::makeSGamma() const
     const volScalarField& gExt = gammaExt();
     const scalarField& gExtIn = gExt.internalField();
 
-    const volScalarField::GeometricBoundaryField& gExtPatches =
+    const volScalarField::Boundary& gExtPatches =
         gExt.boundaryField();
 
     volScalarField gIb(gExt - g);
     const scalarField& gIbIn = gIb.internalField();
 
-    const volScalarField::GeometricBoundaryField& gIbPatches =
+    const volScalarField::Boundary& gIbPatches =
         gIb.boundaryField();
 
     // Internal faces: flux is live between all active and IB cells
@@ -493,6 +497,8 @@ void Foam::immersedBoundaryFvPatch::makeIbCells() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -758,6 +764,8 @@ void Foam::immersedBoundaryFvPatch::makeIbFaces() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibFacesPtr_ || ibFaceCellsPtr_ || ibFaceFlipsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -814,7 +822,7 @@ void Foam::immersedBoundaryFvPatch::makeIbFaces() const
         }
     }
 
-    const volScalarField::GeometricBoundaryField& gammaPatches =
+    const volScalarField::Boundary& gammaPatches =
         gamma().boundaryField();
 
     forAll (gammaPatches, patchI)
@@ -879,6 +887,8 @@ void Foam::immersedBoundaryFvPatch::makeIbInsideFaces() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibInsideFacesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -963,6 +973,8 @@ void Foam::immersedBoundaryFvPatch::makeIbInternalFaces() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibInternalFacesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1056,6 +1068,8 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibPointsPtr_ || ibNormalsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1092,6 +1106,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
 
     forAll (ibc, cellI)
     {
+        // Adjust search span if needed.  HJ, 14/Dec/2012
         vector span
         (
             7*delta[cellI],
@@ -1136,7 +1151,7 @@ void Foam::immersedBoundaryFvPatch::makeIbPointsAndNormals() const
          && mag(ibCellCentres[cellI].z() - ibPoints[cellI].z()) > SMALL
         )
         {
-            FatalErrorIn(__PRETTY_FUNCTION__)
+            WarningIn(__PRETTY_FUNCTION__)
                 << "Intersection point is not on symmetry plane " << nl
                 << "C = " << ibCellCentres[cellI]
                 << " D = " << ibPoints[cellI] << nl
@@ -1157,6 +1172,8 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if
     (
         ibCellCellsPtr_
@@ -1218,6 +1235,8 @@ void Foam::immersedBoundaryFvPatch::makeIbCellCells() const
         {
             label curCell = curCells[i];
             scalar r = mag(C[curCell] - C[ibc[cellI]]);
+
+            // Collect the cells within rM of the fitting cell
             if (r <= rM[cellI])
             {
                 static scalar limit(-Foam::cos(4/9*constant::mathematical::pi));
@@ -1622,6 +1641,8 @@ void Foam::immersedBoundaryFvPatch::makeDeadCells() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (deadCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1655,6 +1676,8 @@ void Foam::immersedBoundaryFvPatch::makeDeadCellsExt() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (deadCellsExtPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1687,6 +1710,8 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (deadFacesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1701,7 +1726,7 @@ void Foam::immersedBoundaryFvPatch::makeDeadFaces() const
     const volScalarField& gE = gammaExt();
     const scalarField& gammaExtI = gE.internalField();
 
-    const volScalarField::GeometricBoundaryField& gEPatches =
+    const volScalarField::Boundary& gEPatches =
         gE.boundaryField();
 
     const labelList& owner = mesh_.faceOwner();
@@ -1769,6 +1794,8 @@ void Foam::immersedBoundaryFvPatch::makeLiveCells() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (liveCellsPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1801,6 +1828,8 @@ void Foam::immersedBoundaryFvPatch::makeIbCellSizes() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibCellSizesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1846,6 +1875,8 @@ void Foam::immersedBoundaryFvPatch::makeIbSf() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibSfPtr_ || ibMagSfPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1870,6 +1901,8 @@ void Foam::immersedBoundaryFvPatch::makeIbDelta() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (ibDeltaPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -1894,6 +1927,8 @@ void Foam::immersedBoundaryFvPatch::makeTriSf() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (triSfPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)

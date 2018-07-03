@@ -86,7 +86,7 @@ immersedBoundaryFvsPatchField<Type>::immersedBoundaryFvsPatchField
     fvsPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>(0)
     ),
     ibPatch_(ptf.ibPatch())

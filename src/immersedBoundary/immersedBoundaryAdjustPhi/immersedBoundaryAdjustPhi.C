@@ -72,7 +72,7 @@ void Foam::immersedBoundaryAdjustPhi
                 // Sum the flux through the immersed boundary
                 const scalar triFlux = sum(ibU.refValue() & ibPatch.triSf());
 
-                scalarField& phiInternal = phi.internalField();
+                scalarField& phiInternal = phi.ref();
 
                 scalar fluxIn = 0;
                 scalar fluxOut = 0;
@@ -317,7 +317,7 @@ void Foam::immersedBoundaryAdjustPhi
                 // Sum the flux through the immersed boundary
                 const scalar triFlux = sum(ibU.refValue() & ibPatch.triSf());
 
-                scalarField& phiInternal = phi.internalField();
+                scalarField& phiInternal = phi.ref();
 
                 scalar fluxIn = 0;
                 scalar fluxOut = 0;

@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -65,7 +65,7 @@ class immersedBoundaryFvPatch
 {
     // Private data
 
-        //- Reference to processor patch
+        //- Reference to immersed boundary patch
         const immersedBoundaryPolyPatch& ibPolyPatch_;
 
         //- Finite volume mesh reference
@@ -423,7 +423,7 @@ public:
             ) const;
 
 
-        // Interpolation functions
+        // Interpolation functions to and from triangular surface
 
             //- Collect ibPoint values: from tri face fields onto intersection
             //  points on the IB surface

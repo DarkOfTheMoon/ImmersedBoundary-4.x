@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -26,6 +26,7 @@ License
 #include "immersedBoundaryForces.H"
 #include "immersedBoundaryFvPatch.H"
 #include "immersedBoundaryFvPatchFields.H"
+#include "addToRunTimeSelectionTable.H"
 #include "volFields.H"
 #include "surfaceFields.H"
 #include "dictionary.H"
@@ -35,38 +36,44 @@ License
 
 namespace Foam
 {
+namespace functionObjects
+{
     defineTypeNameAndDebug(immersedBoundaryForces, 0);
+
+    addToRunTimeSelectionTable
+    (
+        functionObject, immersedBoundaryForces, dictionary
+    );
+}
 }
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::immersedBoundaryForces::immersedBoundaryForces
+Foam::functionObjects::immersedBoundaryForces::immersedBoundaryForces
 (
     const word& name,
     const objectRegistry& obr,
-    const dictionary& dict,
-    const bool loadFromFiles
+    const dictionary& dict
 )
 :
     forces
     (
         name,
         obr,
-        dict,
-        loadFromFiles
+        dict
     )
 {}
 
 
 // * * * * * * * * * * * * * * * * Destructor  * * * * * * * * * * * * * * * //
 
-Foam::immersedBoundaryForces::~immersedBoundaryForces()
+Foam::functionObjects::immersedBoundaryForces::~immersedBoundaryForces()
 {}
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::immersedBoundaryForces::calcForcesMoment()
+void Foam::functionObjects::immersedBoundaryForces::calcForcesMoment()
 {
     force_[0] = vector::zero;
     force_[1] = vector::zero;

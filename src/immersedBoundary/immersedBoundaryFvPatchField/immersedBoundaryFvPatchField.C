@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -101,11 +101,11 @@ immersedBoundaryFvPatchField<Type>::imposeDirichletCondition() const
     ibGrad_ = pTraits<Type>::zero;
 
     // Get non-const access to internal field
-    Field<Type>& psiI = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& psiI = const_cast<Field<Type>&>(this->primitiveField());
 
     // Collect polynomially interpolated values in IB cells
     tmp<Field<Type> > tpolyPsi(new Field<Type>(psiI, ibc));
-    Field<Type>& polyPsi = tpolyPsi();
+    Field<Type>& polyPsi = tpolyPsi.ref();
 
     const vectorField& C = mesh_.cellCentres();
 
@@ -214,7 +214,7 @@ immersedBoundaryFvPatchField<Type>::imposeDirichletCondition() const
     if (counter == nBcIter_ && debug)
     {
         InfoIn(__PRETTY_FUNCTION__)
-            << this->dimensionedInternalField().name()
+            << this->internalField().name()
             << " for patch " << this->patch().name()
             << ", error, max: " << gMax(error)
             << ", min: " << gMin(error)
@@ -249,11 +249,11 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
     ibValue_ = pTraits<Type>::zero;
 
     // Get non-const access to internal field
-    Field<Type>& psiI = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& psiI = const_cast<Field<Type>&>(this->primitiveField());
 
     // Collect polynomially interpolated values in IB cells
     tmp<Field<Type> > tpolyPsi(new Field<Type>(psiI, ibc));
-    Field<Type>& polyPsi = tpolyPsi();
+    Field<Type>& polyPsi = tpolyPsi.ref();
 
     const vectorField& C = mesh_.cellCentres();
 
@@ -352,7 +352,7 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
     if (counter == nBcIter_ && debug)
     {
         InfoIn(__PRETTY_FUNCTION__)
-            << this->dimensionedInternalField().name()
+            << this->internalField().name()
             << " for patch " << this->patch().name()
             << ", error, max: " << gMax(error)
             << ", min: " << gMin(error)
@@ -360,7 +360,7 @@ immersedBoundaryFvPatchField<Type>::imposeNeumannCondition() const
     }
 
 //     Info<< "Neumann condition for " << ibc.size() << " cells of field "
-//         << this->dimensionedInternalField().name() << " = "
+//         << this->internalField().name() << " = "
 //         << polyPsi
 //         << endl;
 
@@ -374,12 +374,12 @@ void immersedBoundaryFvPatchField<Type>::imposeDeadCondition()
     const labelList& dc = ibPatch_.deadCells();
 
 //     Info<< "Dead condition for " << dc.size()  << " cells of field "
-//         << this->dimensionedInternalField().name()
+//         << this->internalField().name()
 //         << " set to value " << deadCellValue_
 //         << endl;
 
     // Get non-const access to internal field
-    Field<Type>& psiI = const_cast<Field<Type>&>(this->internalField());
+    Field<Type>& psiI = const_cast<Field<Type>&>(this->primitiveField());
 
     forAll (dc, dcI)
     {
@@ -445,7 +445,7 @@ void immersedBoundaryFvPatchField<Type>::correctOffDiag
         Field<Type>& source = eqn.source();
 
 //         Info<< "Symmetric correctOffDiag for field "
-//             << this->dimensionedInternalField().name() << endl;
+//             << this->internalField().name() << endl;
 
         forAll (ibFaces, faceI)
         {
@@ -486,7 +486,7 @@ void immersedBoundaryFvPatchField<Type>::correctOffDiag
         Field<Type>& source = eqn.source();
 
 //         Info<< "Asymmetric correctOffDiag for field "
-//             << this->dimensionedInternalField().name() << endl;
+//             << this->internalField().name() << endl;
 
         forAll (ibFaces, faceI)
         {
@@ -572,8 +572,8 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -607,8 +607,8 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
             << "\n    patch type '" << p.type()
             << "' not constraint type '" << typeName << "'"
             << "\n    for patch " << p.name()
-            << " of field " << this->dimensionedInternalField().name()
-            << " in file " << this->dimensionedInternalField().objectPath()
+            << " of field " << this->internalField().name()
+            << " in file " << this->internalField().objectPath()
             << exit(FatalIOError);
     }
 }
@@ -623,7 +623,7 @@ immersedBoundaryFvPatchField<Type>::immersedBoundaryFvPatchField
     fvPatchField<Type>
     (
         ptf.patch(),
-        ptf.dimensionedInternalField(),
+        ptf.internalField(),
         Field<Type>(0)
     ),
     ibPatch_(ptf.ibPatch()),
@@ -805,11 +805,11 @@ void immersedBoundaryFvPatchField<Type>::write(Ostream& os) const
 
     writerPtr->write
     (
-        this->dimensionedInternalField().path(),
+        this->internalField().path(),
         ibPatch_.name(),
         ts.points(),
         f,
-        this->dimensionedInternalField().name(),
+        this->internalField().name(),
         this->triValue()(),
         true
     );

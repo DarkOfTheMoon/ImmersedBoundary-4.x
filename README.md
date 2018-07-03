@@ -6,13 +6,13 @@ http://sourceforge.net/projects/openfoam-extend/files/OpenFOAM_Workshops/OFW7_20
 
 The original repository [ImmersedBoundary](http://github.com:wyldckat/ImmersedBoundary.git)
 by Bruno Santos (wyldckat@github) aims to make it easier to download and create
-forks of this toolkit. This fork [ImmersedBoundary-OF-2.3.x](http://github.com/DarkOfTheMoon/ImmersedBoundary-OF-2.3.x.git)
-by Zhang HuiJie (DarkOfTheMoon@github) has been ported to OpenFOAM-2.3.x.
+forks of this toolkit. This fork [ImmersedBoundary-4.x](http://github.com/DarkOfTheMoon/ImmersedBoundary-4.x.git)
+by Zhang HuiJie (DarkOfTheMoon@github) has been ported to OpenFOAM-4.x.
 
 Installation instructions for foam-extend available at openfoamwiki.net:
 http://openfoamwiki.net/index.php/Extend-bazaar/Toolkits/ImmersedBoundary.
 
-This version targets OpenFOAM-2.3.x.
+This version targets OpenFOAM-4.x.
 
 
 Original authors

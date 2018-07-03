@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -38,7 +38,7 @@ Foam::immersedBoundaryFvPatch::sendAndReceive
     (
         new FieldField<Field, Type>(Pstream::nProcs())
     );
-    FieldField<Field, Type>& procPsi = tprocPsi();
+    FieldField<Field, Type>& procPsi = tprocPsi.ref();
 
     forAll (procPsi, procI)
     {
@@ -127,10 +127,11 @@ Foam::immersedBoundaryFvPatch::toIbPoints
     (
         new Field<Type>(ibc.size(), pTraits<Type>::zero)
     );
-    Field<Type>& ibPsi = tIbPsi();
+    Field<Type>& ibPsi = tIbPsi.ref();
 
     const labelList& hf = hitFaces();
 
+    // Assuming triSurface data is on triangles
     forAll (ibPsi, cellI)
     {
         ibPsi[cellI] = triValues[hf[cellI]];
@@ -178,7 +179,7 @@ Foam::immersedBoundaryFvPatch::toTriFaces
     (
         new Field<Type>(ctfAddr.size(), pTraits<Type>::zero)
     );
-    Field<Type>& ibPsi = tIbPsi();
+    Field<Type>& ibPsi = tIbPsi.ref();
 
     // Do interpolation
     forAll (ctfAddr, triI)

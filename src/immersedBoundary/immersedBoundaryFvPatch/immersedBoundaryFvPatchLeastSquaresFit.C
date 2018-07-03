@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -69,6 +69,8 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (invDirichletMatricesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -194,7 +196,7 @@ void Foam::immersedBoundaryFvPatch::makeInvDirichletMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs, nCoeffs, 0.);
+        scalarSquareMatrix lsM(nCoeffs, Zero);
 
         for (label i = 0; i < lsM.n(); i++)
         {
@@ -283,6 +285,8 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
             << endl;
     }
 
+    // It is an error to attempt to recalculate
+    // if the pointer is already set
     if (invNeumannMatricesPtr_)
     {
         FatalErrorIn(__PRETTY_FUNCTION__)
@@ -475,7 +479,7 @@ void Foam::immersedBoundaryFvPatch::makeInvNeumannMatrices() const
             }
         }
 
-        scalarSquareMatrix lsM(nCoeffs, nCoeffs, 0.0);
+        scalarSquareMatrix lsM(nCoeffs, Zero);
 
         for (label i = 0; i < lsM.n(); i++)
         {

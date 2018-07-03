@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2014-2016 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2014-2018 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -55,6 +55,8 @@ SourceFiles
 
 namespace Foam
 {
+namespace functionObjects
+{
 
 /*---------------------------------------------------------------------------*\
                     Class immersedBoundaryForces Declaration
@@ -78,8 +80,7 @@ public:
         (
             const word& name,
             const objectRegistry&,
-            const dictionary&,
-            const bool loadFromFiles = false
+            const dictionary& dict
         );
 
 
@@ -96,6 +97,7 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+} // End namespace functionObjects
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
